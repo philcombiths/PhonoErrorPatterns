@@ -27,9 +27,6 @@ import panphon
 from collections import OrderedDict
 import regex as re
 
-
-ft = panphon.FeatureTable()
-
 def reDiac():
     
     """   
@@ -109,7 +106,7 @@ def error_pattern(target, actual):
     *Currently only works for target CC clusters
     """
 
-    ft = panphon.FeatureTable()
+    # ft = panphon.FeatureTable()
     error = None
     
     ############# 
@@ -122,13 +119,18 @@ def error_pattern(target, actual):
     if actual == '∅':
         error = "deletion"
         return error
+    
+    # Recognize 'nan' as empty / deletion error
+    if actual == 'nan':
+        error = "deletion"
+        return error
     #############
     
     # Generate segments and features with panphon
-    t_segs = ft.ipa_segs(target)
-    t_fts = ft.word_fts(target)
-    a_segs = ft.ipa_segs(actual)
-    a_fts = ft.word_fts(actual)
+    t_segs = panphon.FeatureTable().ipa_segs(target)
+    t_fts = panphon.FeatureTable().word_fts(target)
+    a_segs = panphon.FeatureTable().ipa_segs(actual)
+    a_fts = panphon.FeatureTable().word_fts(actual)
     t_dict = OrderedDict(zip(t_segs, t_fts))
     a_dict = OrderedDict(zip(a_segs, a_fts))
                     
@@ -186,10 +188,17 @@ def error_pattern(target, actual):
                             smallest_dist = (index, dist)
                         index += 1
                     if smallest_dist[0] == 0:
-                        error = error+'-C2del+C1sub'
+                        error = error+'-C2del-C1sub'
                     if smallest_dist[0] == 1:
-                        error = error+'-C1del+C2sub'
+                        error = error+'-C1del-C2sub'
+            if 'C1' not in error:
+                error = error+'-C1pres'                        
+            if 'C2' not in error:
+                error = error+'-C2pres'
+            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
             return error
+
+
                         
         # Substitution
         if len(a_segs) == len(t_segs):
@@ -198,12 +207,17 @@ def error_pattern(target, actual):
                 if a_segs[1] != t_segs[1]:
                     error = error+'-C2sub'
                 else:
-                    error = error+'-C1sub+C2sub'
+                    error = error+'-C1sub-C2sub'
             else:
                 if a_segs[1] != t_segs[1]:
-                    error = error+'-C1sub+C2sub'
+                    error = error+'-C1sub-C2sub'
                 else:
                     error = error+'-C1sub'
+            if 'C1' not in error:
+                error = error+'-C1pres'                        
+            if 'C2' not in error:
+                error = error+'-C2pres'
+            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
             return error
         
         # All other errors
@@ -248,12 +262,14 @@ def error_pattern(target, actual):
                         error = error+'-C2sub'
                     if smallest_dist[0] == 2:
                         error = error+'-C3sub'
-                        
-#                if 'C2' not in error:
-#                    error = error+'-C2del'
-#                if 'C3' not in error:
-#                    error = error+'-C3del'
-                
+            if 'C1' not in error:
+                error = error+'-C1del'                        
+            if 'C2' not in error:
+                error = error+'-C2del'
+            if 'C3' not in error:
+                error = error+'-C3del'
+            
+            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
             return error
         
         # Substitution
@@ -282,12 +298,8 @@ def error_pattern(target, actual):
                     if smallest_dist[0] == 1:
                         error = error+'-C2sub'
                     if smallest_dist[0] == 2:
-                        error = error+'-C3sub'
-                        
-#                if 'C2' not in error:
-#                    error = error+'-C2del'
-#                if 'C3' not in error:
-#                    error = error+'-C3del'
+                        error = error+'-C3sub'                        
+            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
             return error
         
         # All other errors
@@ -302,7 +314,7 @@ def error_pattern(target, actual):
         structure = "CCC+"
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
 
-def error_patterns_table(input_filename="micro_data_b.csv"):
+def error_patterns_table(input_filename):
     """
     Generate error patterns for a dataset of transcriptions.
     
@@ -330,7 +342,7 @@ def error_patterns_table(input_filename="micro_data_b.csv"):
         error = error_pattern(row[0], row[1])
         error_patterns.append(error)
         counter +=1
-        if counter % 100 == 0: 
+        if counter % 100: 
             print(f"{counter} out of {length}")
     error_patterns_series = pd.Series(error_patterns, name='error_pattern')    
     error_patterns_df = data[['IPA Target', 'IPA Actual']]    
@@ -338,7 +350,7 @@ def error_patterns_table(input_filename="micro_data_b.csv"):
     error_patterns_df.to_csv('error_patterns.csv', encoding='utf-8', index=False, na_rep='')    
     return error_patterns_df
 
-error_patterns_df = error_patterns_table("test.csv")
+error_patterns_df = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_b.csv")
 
 
 
