@@ -329,14 +329,18 @@ def error_patterns_table(input_filename):
         error = error_pattern(row[0], row[1])
         error_patterns.append(error)
         counter +=1
-        print(f"{counter} out of {length}")
+        if counter % 1000 == 0:
+            print(f"{counter} out of {length}")
+    print(f"{length} transcriptions complete")
     error_patterns_series = pd.Series(error_patterns, name='error_pattern')    
     error_patterns_df = data[['IPA Target', 'IPA Actual']]    
+    output_filename = 'error_patterns.csv'
     error_patterns_df = error_patterns_df.merge(error_patterns_series, left_index=True, right_index=True)    
-    error_patterns_df.to_csv('error_patterns.csv', encoding='utf-8', index=False, na_rep='')    
+    error_patterns_df.to_csv(output_filename, encoding='utf-8', index=False, na_rep='')
+    print(f"Error patterns saved to {output_filename}")
     return error_patterns_df
 
-error_patterns_df = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_b.csv")
+
 
 
 
