@@ -21,11 +21,11 @@ Setup Procedures:
     (e.g., 'C:/Users/Philip/Anaconda3/Lib/site-packages/panphon/data')
 """
 
-
 import pandas as pd
-import panphon
 from collections import OrderedDict
 import regex as re
+import panphon
+ft = panphon.FeatureTable()
 
 def reDiac():
     
@@ -53,12 +53,11 @@ def reDiac():
     additionalChars = [r'ᴸ', r'ᵇ', r':', r'<', r'←', r'=', r"'", r"‚", r"ᵊ"]
 
     pattern = r'(' + r'|'.join(unicodeBlockList+additionalChars) + r')'
-    pattern = re.compile(pattern)
-    
+    pattern = re.compile(pattern)    
     return pattern
 
-def extract_diacritics(join=True):
-    
+
+def extract_diacritics(join=True):    
     """
     Extract unique diacritics from a pasted column of IPA transcriptions
     
@@ -71,8 +70,7 @@ def extract_diacritics(join=True):
         reDiac()
     
     Returns list of diacritics
-    """
-    
+    """    
     res = []
     trans_col = input('Paste column of entries:')
     trans_col_list = trans_col.split("\n")
@@ -90,8 +88,7 @@ def extract_diacritics(join=True):
     return list(set(res))
     
 
-def error_pattern(target, actual):
-    
+def error_pattern(target, actual):    
     """
     Return the phonological error pattern from a target/actual pair of
     consonants or consonant sequences.
@@ -104,11 +101,8 @@ def error_pattern(target, actual):
         error_pattern : str of error type label
     
     *Currently only works for target CC clusters
-    """
-
-    # ft = panphon.FeatureTable()
+    """   
     error = None
-    
     ############# 
     # Workarounds    
     # Sub ᵊ with ə for easier epenthesis ID
@@ -124,13 +118,12 @@ def error_pattern(target, actual):
     if actual == 'nan':
         error = "deletion"
         return error
-    #############
-    
+    #############       
     # Generate segments and features with panphon
-    t_segs = panphon.FeatureTable().ipa_segs(target)
-    t_fts = panphon.FeatureTable().word_fts(target)
-    a_segs = panphon.FeatureTable().ipa_segs(actual)
-    a_fts = panphon.FeatureTable().word_fts(actual)
+    t_segs = ft.ipa_segs(target)
+    t_fts = ft.word_fts(target)
+    a_segs = ft.ipa_segs(actual)
+    a_fts = ft.word_fts(actual)
     t_dict = OrderedDict(zip(t_segs, t_fts))
     a_dict = OrderedDict(zip(a_segs, a_fts))
                     
@@ -144,7 +137,7 @@ def error_pattern(target, actual):
         error = 'accurate'
         return error
     
-    # Assign target structure type
+    # Errors by target structure type
     assert len(target) > 0, "target must be len>0"
     # assert no vowels
     if len(target) == 1:
@@ -182,8 +175,8 @@ def error_pattern(target, actual):
                 else:
                     index = 0
                     smallest_dist = (index, 1)
-                    for ft in t_fts:
-                        dist = ft-a_fts[0]
+                    for feat in t_fts:
+                        dist = feat-a_fts[0]
                         if dist < smallest_dist[1]:
                             smallest_dist = (index, dist)
                         index += 1
@@ -197,8 +190,6 @@ def error_pattern(target, actual):
                 error = error+'-C2pres'
             error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
             return error
-
-
                         
         # Substitution
         if len(a_segs) == len(t_segs):
@@ -224,8 +215,7 @@ def error_pattern(target, actual):
         else:
             error = "other"
             return error
-        
-        
+                
     if len(target) == 3:
         structure = "CCC"
         
@@ -247,7 +237,6 @@ def error_pattern(target, actual):
                         error = error+'-C2pres'
                     if t_segs.index(seg) == 2:
                         error = error+'-C3pres'
-
                 else:        
                     index = 0
                     smallest_dist = (index, 1)
@@ -267,8 +256,7 @@ def error_pattern(target, actual):
             if 'C2' not in error:
                 error = error+'-C2del'
             if 'C3' not in error:
-                error = error+'-C3del'
-            
+                error = error+'-C3del'            
             error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
             return error
         
@@ -308,8 +296,7 @@ def error_pattern(target, actual):
             return error
                         
         return error        
-        
-        
+                
     if len(target) > 3:
         structure = "CCC+"
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
@@ -342,8 +329,7 @@ def error_patterns_table(input_filename):
         error = error_pattern(row[0], row[1])
         error_patterns.append(error)
         counter +=1
-        if counter % 100: 
-            print(f"{counter} out of {length}")
+        print(f"{counter} out of {length}")
     error_patterns_series = pd.Series(error_patterns, name='error_pattern')    
     error_patterns_df = data[['IPA Target', 'IPA Actual']]    
     error_patterns_df = error_patterns_df.merge(error_patterns_series, left_index=True, right_index=True)    
