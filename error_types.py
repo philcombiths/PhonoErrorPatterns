@@ -234,26 +234,68 @@ def error_pattern(target, actual):
                     if t_segs.index(seg) == 2:
                         error = error+'-C3pres'
 
-                    
-                    smallest_dist = ((0,0), 1)
-                    t_ind = 0
-                    for t_ft in t_fts:
-                        a_ind = 0
-                        for a_ft in a_fts:                            
-                            dist = t_ft-a_ft
-                            
-                            if dist < smallest_dist[1]:
-                                smallest_dist = ((t_ind, a_ind), dist)
-                            a_ind += 1
-                        t_ind += 1
-                    if smallest_dist[0][0] == 0 and 'C1' not in error:
+                else:        
+                    index = 0
+                    smallest_dist = (index, 1)
+                    for t_ft in t_fts:                        
+                        dist = t_ft-a_dict[seg]                            
+                        if dist < smallest_dist[1]:
+                            smallest_dist = (index, dist)
+                        index += 1
+                    if smallest_dist[0] == 0:
                         error = error+'-C1sub'
-                    if smallest_dist[0][0] == 1 and 'C2' not in error:
+                    if smallest_dist[0] == 1:
                         error = error+'-C2sub'
-                    if smallest_dist[0][0] == 2 and 'C3' not in error:
+                    if smallest_dist[0] == 2:
                         error = error+'-C3sub'
                         
-            return error        
+#                if 'C2' not in error:
+#                    error = error+'-C2del'
+#                if 'C3' not in error:
+#                    error = error+'-C3del'
+                
+            return error
+        
+        # Substitution
+        if len(a_segs) == len(t_segs):
+            error = 'substitution'
+            for seg in a_segs:
+                if seg in t_segs:
+                    if t_segs.index(seg) == 0:
+                        error = error+'-C1pres'
+                    if t_segs.index(seg) == 1:
+                        error = error+'-C2pres'
+                    if t_segs.index(seg) == 2:
+                        error = error+'-C3pres'
+
+                else:        
+                    index = 0
+                    smallest_dist = (index, 1)
+                    for t_ft in t_fts:                        
+                        dist = t_ft-a_dict[seg]                            
+                        if dist < smallest_dist[1]:
+                            if t_segs[index] not in a_segs:
+                                smallest_dist = (index, dist)
+                        index += 1
+                    if smallest_dist[0] == 0:
+                        error = error+'-C1sub'
+                    if smallest_dist[0] == 1:
+                        error = error+'-C2sub'
+                    if smallest_dist[0] == 2:
+                        error = error+'-C3sub'
+                        
+#                if 'C2' not in error:
+#                    error = error+'-C2del'
+#                if 'C3' not in error:
+#                    error = error+'-C3del'
+            return error
+        
+        # All other errors
+        else:
+            error = "other"
+            return error
+                        
+        return error        
         
         
     if len(target) > 3:
