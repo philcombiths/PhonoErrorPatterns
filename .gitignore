@@ -1,5 +1,6 @@
 # Misc
 test/
+error_patterns.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

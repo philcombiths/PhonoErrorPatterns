@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jul 28 14:58:21 2020
+From IPA target and actual transcriptions, generates error pattern labels with
+error_pattern() for a single pair of transcriptions or error_pattern_table()
+for a dataset of transcription pairs. error_quantifier() may be used to convert
+error pattern str labels to numeric values.
 
-@author: Philip
 
-"""
-
-"""
 Setup Procedures:
 1. Install or verify installation of panphon in the current python environment:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
@@ -19,6 +18,12 @@ Setup Procedures:
 5. Copy 'ipa_all.csv' and paste into the panphon/data directory in the
     current python environment 
     (e.g., 'C:/Users/Philip/Anaconda3/Lib/site-packages/panphon/data')
+    
+Example use case:
+res = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_b.csv")            
+    
+Created on Tue Jul 28 14:58:21 2020
+@author: Philip Combiths
 """
 
 import pandas as pd
@@ -27,22 +32,18 @@ import regex as re
 import panphon
 ft = panphon.FeatureTable()
 
-def reDiac():
-    
+def reDiac(): 
     """   
     Generate regex pattern to locate diacritics.
     
     Requires:
         regex module as re
     
-    Returns: 
+    Returns:
         compiled regex pattern
     
     *Borrowed from PhonDPA\auxiliary.py
-    """
-    
-    # assert type(text) is str   
-    
+    """   
     unicodeBlockList = [r'\p{InCombining_Diacritical_Marks_for_Symbols}',
                         r'\p{InSuperscripts_and_Subscripts}',
                         r'\p{InCombining_Diacritical_Marks}',
@@ -59,7 +60,7 @@ def reDiac():
 
 def extract_diacritics(join=True):    
     """
-    Extract unique diacritics from a pasted column of IPA transcriptions
+    Extracts unique diacritics from a pasted column of IPA transcriptions.
     
     Args:
         join : specifies joining of diacritics in the same transcription.
@@ -69,7 +70,7 @@ def extract_diacritics(join=True):
         regex module as re
         reDiac()
     
-    Returns list of diacritics
+    Returns list of unique str diacritics.
     """    
     res = []
     trans_col = input('Paste column of entries:')
@@ -100,7 +101,8 @@ def error_pattern(target, actual):
     Returns:
         error_pattern : str of error type label
     
-    *Currently only works for target CC clusters
+    *Currently only tested for reliability with C and CC clusters.
+    *CCC cluster epenthesis requires revision.
     """   
     error = None
     ############# 
@@ -158,9 +160,36 @@ def error_pattern(target, actual):
    
         # Epenthesis
         for seg in a_dict:       
-            if ('syl', 1) in a_dict[seg].items():
+            if ('syl', 1) in a_dict[seg].items() and len(a_dict) > 2:
                 # Contains a vowel
-                error = 'epenthesis'
+                error = 'epenthesis'            
+                for seg in a_segs:
+                    if ('syl', 1) in a_dict[seg].items():
+                        continue
+                    else:
+                        if seg in t_segs:
+                            if t_segs.index(seg) == 0:
+                                error = error+'-C1pres'
+                            if t_segs.index(seg) == 1:
+                                error = error+'-C2pres'
+                            if t_segs.index(seg) == 2:
+                                error = error+'-C3pres'    
+                        else:        
+                            index = 0
+                            smallest_dist = (index, 1)
+                            for t_ft in t_fts:                        
+                                dist = t_ft-a_dict[seg]                            
+                                if dist < smallest_dist[1]:
+                                    if t_segs[index] not in a_segs:
+                                        smallest_dist = (index, dist)
+                                index += 1
+                            if smallest_dist[0] == 0:
+                                error = error+'-C1sub'
+                            if smallest_dist[0] == 1:
+                                error = error+'-C2sub'
+                            if smallest_dist[0] == 2:
+                                error = error+'-C3sub'                        
+                error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))
                 return error
        
         # Cluster Reduction
@@ -188,7 +217,7 @@ def error_pattern(target, actual):
                 error = error+'-C1pres'                        
             if 'C2' not in error:
                 error = error+'-C2pres'
-            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
+            error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))
             return error
                         
         # Substitution
@@ -208,7 +237,7 @@ def error_pattern(target, actual):
                 error = error+'-C1pres'                        
             if 'C2' not in error:
                 error = error+'-C2pres'
-            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
+            error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))
             return error
         
         # All other errors
@@ -223,8 +252,34 @@ def error_pattern(target, actual):
         for seg in a_dict:       
             if ('syl', 1) in a_dict[seg].items():
                 # Contains a vowel
-                error = 'epenthesis'
-                return error        
+                error = 'epenthesis'            
+                for seg in a_segs:
+                    if ('syl', 1) in a_dict[seg].items():
+                        continue
+                    else:
+                        if seg in t_segs:
+                            if t_segs.index(seg) == 0:
+                                error = error+'-C1pres'
+                            if t_segs.index(seg) == 1:
+                                error = error+'-C2pres'
+                            if t_segs.index(seg) == 2:
+                                error = error+'-C3pres'    
+                        else:        
+                            index = 0
+                            smallest_dist = (index, 1)
+                            for t_ft in t_fts:                        
+                                dist = t_ft-a_dict[seg]                            
+                                if dist < smallest_dist[1]:
+                                    if t_segs[index] not in a_segs:
+                                        smallest_dist = (index, dist)
+                                index += 1
+                            if smallest_dist[0] == 0:
+                                error = error+'-C1sub'
+                            if smallest_dist[0] == 1:
+                                error = error+'-C2sub'
+                            if smallest_dist[0] == 2:
+                                error = error+'-C3sub'                        
+                error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))     
         
         # Cluster Reduction
         if len(a_segs) < len(t_segs):
@@ -257,7 +312,7 @@ def error_pattern(target, actual):
                 error = error+'-C2del'
             if 'C3' not in error:
                 error = error+'-C3del'            
-            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
+            error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))
             return error
         
         # Substitution
@@ -287,7 +342,7 @@ def error_pattern(target, actual):
                         error = error+'-C2sub'
                     if smallest_dist[0] == 2:
                         error = error+'-C3sub'                        
-            error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))
+            error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))
             return error
         
         # All other errors
@@ -301,9 +356,45 @@ def error_pattern(target, actual):
         structure = "CCC+"
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
 
+def error_quantifier(x, correct_value=0.5, substitution_value=0.3, 
+                     epenthesis_penalty=-0.3):
+    """
+    Generates a float value quantifying  consonant cluster error patterns
+        generated by error_patterns(). Currently used for CC clusters, but
+        can be modified for use with C or CC+.
+        
+    Args:
+        x : str error pattern input in format "pattern"+*"-C#pattern",
+            generated by error_pattern()
+        correct_value: float score added for a correct segment. Default =
+            0.5
+        substitution_value : float score added for a substituted segment.
+            Default = 0.
+        epenthesis_penalty : float negative value added to an epenthesized
+            segment. Default = -0.3
+    
+    Returns float quantified error pattern value.
+    """
+    x_list = [x.split('-')[0], x.split('-')[1:]]
+    score = 0
+    if x == 'accurate':
+        score = 1
+        return score
+    if x == 'deletion':
+        score = 0
+        return score
+    if x_list[0] == 'epenthesis':
+        score += epenthesis_penalty
+    for seg in x_list[1]:
+        if 'pres' in seg:
+            score += correct_value
+        if 'sub' in seg:
+            score += substitution_value
+    return score
+
 def error_patterns_table(input_filename):
     """
-    Generate error patterns for a dataset of transcriptions.
+    Generates error patterns for a dataset of transcriptions.
     
     Requires:
         error_patterns()
@@ -335,12 +426,15 @@ def error_patterns_table(input_filename):
     error_patterns_series = pd.Series(error_patterns, name='error_pattern')    
     error_patterns_df = data[['IPA Target', 'IPA Actual']]    
     output_filename = 'error_patterns.csv'
-    error_patterns_df = error_patterns_df.merge(error_patterns_series, left_index=True, right_index=True)    
+    error_patterns_df = error_patterns_df.merge(error_patterns_series, left_index=True, right_index=True)
+    error_patterns_df['error_basic'] = error_patterns_df['error_pattern'].apply(lambda x: x.split('-')[0])
+    error_patterns_df['error_quant'] = error_patterns_df['error_pattern'].apply(error_quantifier)
     error_patterns_df.to_csv(output_filename, encoding='utf-8', index=False, na_rep='')
     print(f"Error patterns saved to {output_filename}")
     return error_patterns_df
 
 
 
+        
 
 
