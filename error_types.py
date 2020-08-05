@@ -12,7 +12,7 @@ Setup Procedures:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
 2. Use extract_diacritics() to derive list of unique diacritics in dataset.
     - Requires transcriptions in a single column.
-3. Update diacritic_definitions.yml in pandata/data with any diacritics
+3. Update diacritic_definitions.yml in panphon/data with any diacritics
     not already in definitions.
 4. Run command line from panphon directory to update definitions:
     'python bin/generate_ipa_all.py data/ipa_bases.csv -d data/diacritic_definitions.yml -s data/sort_order.yml data/ipa_all.csv'
@@ -30,65 +30,10 @@ Created on Tue Jul 28 14:58:21 2020
 import pandas as pd
 from collections import OrderedDict
 import io
-import regex as re
+from diacritics import reDiac, extract_diacritics
+from ph_element import ph_element, ph_segment, ph_cluster
 import panphon
 ft = panphon.FeatureTable()
-
-def reDiac(): 
-    """   
-    Generate regex pattern to locate diacritics.
-    
-    Requires:
-        regex module as re
-    
-    Returns:
-        compiled regex pattern
-    
-    *Borrowed from PhonDPA\auxiliary.py
-    """   
-    unicodeBlockList = [r'\p{InCombining_Diacritical_Marks_for_Symbols}',
-                        r'\p{InSuperscripts_and_Subscripts}',
-                        r'\p{InCombining_Diacritical_Marks}',
-                        r'\p{InSpacing_Modifier_Letters}',
-                        r'\p{InCombining_Diacritical_Marks_Extended}'
-                        r'\p{InCombining_Diacritical_Marks_Supplement}']
-
-    additionalChars = [r'ᴸ', r'ᵇ', r':', r'<', r'←', r'=', r"'", r"‚", r"ᵊ"]
-
-    pattern = r'(' + r'|'.join(unicodeBlockList+additionalChars) + r')'
-    pattern = re.compile(pattern)    
-    return pattern
-
-
-def extract_diacritics(join=True):    
-    """
-    Extracts unique diacritics from a pasted column of IPA transcriptions.
-    
-    Args:
-        join : specifies joining of diacritics in the same transcription.
-            Default True.
-    
-    Requires: 
-        regex module as re
-        reDiac()
-    
-    Returns list of unique str diacritics.
-    """    
-    res = []
-    trans_col = input('Paste column of entries:')
-    trans_col_list = trans_col.split("\n")
-    for transcription in trans_col_list:
-        diacritics = re.findall(reDiac(), transcription)
-        if len(diacritics) == 0:
-            continue
-        else:
-            if join==True:
-                # Join multiple diacritics in a transcription
-                res.append(''.join(diacritics))
-            if join==False:
-                for d in diacritics:
-                    res.append(d)
-    return list(set(res))
     
 
 def error_pattern(target, actual, debug=False):    
@@ -106,8 +51,10 @@ def error_pattern(target, actual, debug=False):
     *Currently only tested for reliability with C and CC clusters.
     *CCC cluster epenthesis requires revision.
     
-    TO DO: Could determine instances that still count as "present" instead of substitution:
-        e.g., "kʴ" for "kr".
+    TO DO: fix issue: multiple actual segments whose smallest distance indicates
+        substitution with the same target consonant.
+    TO DO: Could determine instances that still count as "present" instead of 
+        substitution: e.g., "kʴ" for "kr".
     TO DO: Specify vocalization substitution pattern
         
     """   
@@ -234,7 +181,6 @@ def error_pattern(target, actual, debug=False):
                     if f'C{i+1}' not in error:
                         error = error+f'-C{i+1}del'
                    
-
             # Removes duplicates right now.
             #error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))
             error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))           
@@ -250,6 +196,150 @@ def error_pattern(target, actual, debug=False):
     if len(target) > 3:
         structure = "CCC+"
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
+        
+
+target='rj'
+actual='ɡaj'
+pattern='epenthesis_other'
+
+def error_pattern_resolver(target, actual, pattern):
+    
+    t = ph_cluster(target, 'target')
+    a = ph_cluster(actual, 'actual')
+    
+    ### NOT WORKING. NEED TO FIND SOLUTION SO THAT THE ORDER IN WHICH 
+    ### BEST PAIRS ARE FOUND DOESN'T MATTER.
+    ## Could keep a list of all possible combinations and iterate through them to find
+    ## the best ones. 
+    
+    
+    if pattern == 'epenthesis_other':
+        dist_first = (10, ())
+        dist_second = (10, ())
+        for tseg in t:
+            cur_t_seg = tseg.string
+            for aseg in a:
+                if aseg.type == 'vowel':
+                    continue
+                cut_a_seg = aseg.string
+                pair = (tseg, aseg)
+                dist = tseg.fts()-aseg.fts()
+                if dist < dist_first[0]:
+                    dist_second = dist_first
+                    dist_first = (dist, pair)
+                elif dist < dist_second[0]:
+                    # Skip combinations with a segment already assigned to the
+                    # best combination
+                    if pair[0].position == dist_first[1][0].position:
+                        continue
+                    if pair[1].position == dist_first[1][1].position+1:
+                        continue
+                    else:
+                        dist_second = (dist, pair)
+        return (dist_first[1], dist_second[1])        
+    
+    # For CC subsitutitons
+    if pattern == 'substitution_other' and len(t)==2:
+        dist_first = (1, ())
+        dist_second = (1, ())
+        for tseg in t:
+            cur_t_seg = tseg.string
+            for aseg in a:
+                cut_a_seg = aseg.string
+                pair = (tseg, aseg)
+                dist = tseg.fts()-aseg.fts()
+                if dist < dist_first[0]:
+                    dist_second = dist_first
+                    dist_first = (dist, pair)
+                elif dist < dist_second[0]:
+                    # Skip combinations with a segment already assigned to the
+                    # best combination
+                    if pair[0].position == dist_first[1][0].position:
+                        continue
+                    if pair[1].position == dist_first[1][1].position:
+                        continue
+                    else:
+                        dist_second = (dist, pair)
+        return (dist_first[1], dist_second[1])
+    
+    if pattern == 'substitution_other' and len(t)==3:
+        dist_first = (1, ())
+        dist_second = (1, ())
+        dist_third = (1, ())
+        for tseg in t:
+            cur_t_seg = tseg.string
+            for aseg in a:
+                cut_a_seg = aseg.string
+                pair = (tseg, aseg)
+                dist = tseg.fts()-aseg.fts()
+                if dist < dist_first[0]:
+                    dist_second = dist_first
+                    dist_third = dist_second
+                    dist_first = (dist, pair)
+                else:
+                    if dist < dist_second[0]:
+                        # Skip combinations with a segment already assigned to the
+                        # best combination
+                        if pair[0].position == dist_first[1][0].position:
+                            continue
+                        if pair[1].position == dist_first[1][1].position:
+                            continue
+                        else:
+                            dist_third = dist_second
+                            dist_second = (dist, pair)
+                    else:                        
+                        if dist < dist_third[0]:                            
+                            # Skip combinations with a segment already assigned to the
+                            # best combination
+                            if pair[0].position == dist_first[1][0].position:
+                                if pair[0].position == dist_second[1][0].position:
+                                    continue
+                            if pair[1].position == dist_first[1][1].position:
+                                if pair[1].position == dist_second[1][1].position:
+                                    continue
+                            else:
+                                dist_third = (dist, pair)            
+        return (dist_first[1], dist_second[1], dist_third[1])
+    
+
+result = error_pattern_resolver(target, actual, pattern)
+    
+    
+    
+    
+#    # Steps for "other errors"
+#    # If 'pres' in C#:
+#    if pattern == 'substitution_other':
+#        # Create a T:A pair
+#        for i_t, t in enumerate(t_pairs):
+#            for i_a, a in enumerate(a_pairs):
+#                cur_pair = ((t[0], i_t), a[0])
+#                cur_dist = t[1]-a[1]
+#                pair_value = (cur_dist, cur_pair)
+#                
+#                
+#
+#    index = 0
+#    smallest_dist = (index, 1)
+#    for t_ft in t_fts:                        
+#        dist = t_ft-seg[1]                            
+#        # doesn't count equal segments in distance
+#        if 0 < dist < smallest_dist[1]:
+#            smallest_dist = (index, dist)
+#        index += 1
+#    if smallest_dist[0] == 0: # and 'C1' not in error:
+#        error = error+'-C1sub'
+#    if smallest_dist[0] == 1:# and 'C2' not in error:
+#        error = error+'-C2sub' 
+#    if smallest_dist[0] == 2:# and 'C3' not in error:
+#        error = error+'-C3sub'
+
+
+    
+    #   C#(other) = C#(missing)
+    # Else:
+    #    try all combinations of pairings to find the shortest configuration    
+
 
 def error_quantifier(x, full_correct_value=1, full_deletion_value=0, 
                      full_substitution_value=0.6, correct_seg_value=1, 
@@ -295,6 +385,10 @@ def error_quantifier(x, full_correct_value=1, full_deletion_value=0,
     if x == 'substitution_other':
         score += full_substitution_value
         return score
+    # Miscellaneous epenthesis
+    if x == 'epenthesis_other':
+        score += full_correct_value+epenthesis_penalty
+        return score
     # For consonant clusters, allocate points per segment   
     for seg in x_list[1]:
         if 'pres' in seg:
@@ -302,6 +396,7 @@ def error_quantifier(x, full_correct_value=1, full_deletion_value=0,
         if 'sub' in seg:
             score += substitution_seg_value/(x_len*correct_seg_value)
     return score
+
 
 def error_patterns_table(input_filename, score_column=True):
     """
@@ -380,12 +475,26 @@ def debug_testing(test_cases_list):
             result_list = [[x[0], x[1]] for x in zip(group[1], group[2])]
         group.append(result_list)
     return test_cases_list
-           
-
-result = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_c.csv")
-#result = import_test_cases()
-#result = debug_testing(result)
+          
+# Final Result Generation
+#result = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_c.csv")
 
 # Debug Testing
+#result = import_test_cases()
+#result = debug_testing(result)
+    
+res = error_pattern('ʝw','jan', debug=True)
 
+            
 
+#pattern = reDiac()
+#
+#
+#with open(r"C:\Users\Philip\Documents\GitHub\panphon\panphon\data\diacritic_definitions.yml", mode='r', encoding='utf-8') as f:
+#    text = f.read()
+#
+#diacritics_to_add = []
+#for x in result:
+#    if x not in text:
+#        diacritics_to_add.append(x)
+        
