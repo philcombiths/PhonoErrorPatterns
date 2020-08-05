@@ -198,21 +198,34 @@ def error_pattern(target, actual, debug=False):
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
         
 
-target='rj'
-actual='ɡaj'
-pattern='epenthesis_other'
+#target='rj'
+#actual='ɡaj'
+#pattern='epenthesis_other'
+
+target='ʝw'
+actual='mj'
+pattern='substitution_other'
 
 def error_pattern_resolver(target, actual, pattern):
     
-    t = ph_cluster(target, 'target')
-    a = ph_cluster(actual, 'actual')
+    t = ph_element(target, 'target').convert_type()
+    a = ph_element(actual, 'actual').convert_type()
     
     ### NOT WORKING. NEED TO FIND SOLUTION SO THAT THE ORDER IN WHICH 
     ### BEST PAIRS ARE FOUND DOESN'T MATTER.
     ## Could keep a list of all possible combinations and iterate through them to find
     ## the best ones. 
     
-    
+    ### Solution:
+    """
+    1.Get the smallest group of pairs
+    2.Check that segment positions do not overlap for any of them.
+    3.If so, remove the largest of the overlapping segments
+    4.Bring next smallest pair
+    5.Repeat check for segment overlap
+    6.Continue until the smallest group is found with no segment overlap
+    7.Create expection for cases of assimilation
+    """
     if pattern == 'epenthesis_other':
         dist_first = (10, ())
         dist_second = (10, ())
@@ -398,7 +411,7 @@ def error_quantifier(x, full_correct_value=1, full_deletion_value=0,
     return score
 
 
-def error_patterns_table(input_filename, score_column=True):
+def error_patterns_table(input_filename, score_column=True, resolver=False):
     """
     Generates error patterns for a dataset of transcriptions.
     
@@ -436,6 +449,14 @@ def error_patterns_table(input_filename, score_column=True):
     error_patterns_df['error_basic'] = error_patterns_df['error_pattern'].apply(lambda x: x.split('-')[0])
     if score_column:
         error_patterns_df['error_score'] = error_patterns_df['error_pattern'].apply(error_quantifier)
+    if resolver:
+        resolved_error_list = []
+        counter = 0
+        for index, target, actual, pattern in error_patterns_df[['IPA Target', 'IPA Actual', 'error_pattern']].itertuples():            
+            resolved_error_list.append(error_pattern_resolver(target, actual, pattern))
+            counter+=1
+            print(f"Resolved {counter} out of {length}")
+        error_patterns_df['resolved_error'] = resolved_error_list
     error_patterns_df.to_csv(output_filename, encoding='utf-8', index=False, na_rep='')
     print(f"Error patterns saved to {output_filename}")
     return error_patterns_df
@@ -475,9 +496,10 @@ def debug_testing(test_cases_list):
             result_list = [[x[0], x[1]] for x in zip(group[1], group[2])]
         group.append(result_list)
     return test_cases_list
-          
+
+     
 # Final Result Generation
-#result = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_c.csv")
+result = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_c.csv")
 
 # Debug Testing
 #result = import_test_cases()
