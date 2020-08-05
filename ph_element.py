@@ -80,10 +80,11 @@ class ph_segment(ph_element):
             self.type = "consonant"
         elif ('syl', 1) in self.features[0].items():
             self.type = "vowel"     
+        self.fts = self.features[0]
     
     def fts(self):
         """get panphon "Segment" object with segment features"""
-        return self.features[0]
+        return self.fts
             
     def __len__(self):
         return len(self.ipa)    

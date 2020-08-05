@@ -28,6 +28,7 @@ Created on Tue Jul 28 14:58:21 2020
 """
 
 import pandas as pd
+import numpy as np
 from collections import OrderedDict
 import io
 from diacritics import reDiac, extract_diacritics
@@ -206,17 +207,25 @@ target='ʝw'
 actual='mj'
 pattern='substitution_other'
 
+
+
+
+
+
+
+
+
 def error_pattern_resolver(target, actual, pattern):
     
     t = ph_element(target, 'target').convert_type()
     a = ph_element(actual, 'actual').convert_type()
-    
+        
     ### NOT WORKING. NEED TO FIND SOLUTION SO THAT THE ORDER IN WHICH 
     ### BEST PAIRS ARE FOUND DOESN'T MATTER.
     ## Could keep a list of all possible combinations and iterate through them to find
     ## the best ones. 
     
-    ### Solution:
+    ### Possible Solution:
     """
     1.Get the smallest group of pairs
     2.Check that segment positions do not overlap for any of them.
@@ -226,7 +235,69 @@ def error_pattern_resolver(target, actual, pattern):
     6.Continue until the smallest group is found with no segment overlap
     7.Create expection for cases of assimilation
     """
-    if pattern == 'epenthesis_other':
+    
+    if pattern == 'substitution_other' and len(t)==2:
+        # Create target-actual feature distance matrix
+        error = 'substitution'
+        index = pd.Series([x for x in a])
+        cols = pd.Series([x for x in t])        
+        dist_matrix = pd.DataFrame(index.apply(
+                lambda x: cols.apply(lambda y: x.fts-y.fts)))
+        dist_matrix.index = index
+        dist_matrix.columns = cols
+        # When target and actual are same length, give a bonus to scores that
+        # match relative position in the cluster
+        position_match_bonus = -0.1
+        if len(t) == len(a):
+            for i in range(len(t)):
+                dist_matrix.iloc[i,i] += position_match_bonus       
+        # For each row in first dist_matrix column (T1) iterate over possible
+        # valid alignment combinations.
+        col1 = dist_matrix.iloc[:,0]
+        options = []
+        for a1, dist1 in enumerate(col1):
+            option = []
+            t1 = (dist1, a1)
+            option.append(t1)
+            for i in range(1, len(t)):
+                for a, dist in enumerate(dist_matrix.iloc[:,i]):
+                    if a == a1:
+                        continue
+                    else:
+                        t = (dist, a)
+                        option.append(t)
+            options.append(option)           
+        # Compare options to ensure non-overlap in positions.
+        for i_op in range(1, len(options)):  
+            for i_seg in range(len(options[0])):    
+                if options[0][i_seg][1] == options[i_op][i_seg][1]:
+                    raise Exception
+        # Determine best segment alignment pairings
+        distances = [sum([x[0] for x in option]) for option in options]
+        distance_array = np.array(distances)
+        best_dist = (min(distances), distances.index(min(distances)))
+        if len(np.where(distance_array == best_dist[0])[0]) > 1:
+            raise Exception("multiple ideal alignments found")        
+        best_option = options[best_dist[1]]
+        alignment = []
+        for i, seg in enumerate(best_option):
+            col_index = i
+            row_index = seg[1]
+            value = dist_matrix.iloc[row_index, col_index]
+            targ = dist_matrix.iloc[:,col_index].name
+            act = dist_matrix.iloc[row_index].name
+            pair = (targ, act, value)            
+            alignment.append(pair)            
+        # Assign segment-by-segment patterns to error string
+        for i, seg in enumerate(alignment):
+            if seg[2] == 0:
+                error += f"-C{i+1}pres"
+            elif seg[2] > 0:
+                error += f"-C{i+1}sub"
+        return error, alignment
+            
+    ### Not working because works in only one direction....
+    if pattern == 'NOT USED epenthesis':
         dist_first = (10, ())
         dist_second = (10, ())
         for tseg in t:
@@ -252,7 +323,7 @@ def error_pattern_resolver(target, actual, pattern):
         return (dist_first[1], dist_second[1])        
     
     # For CC subsitutitons
-    if pattern == 'substitution_other' and len(t)==2:
+    if pattern == 'NOT USED substitution' and len(t)==2:
         dist_first = (1, ())
         dist_second = (1, ())
         for tseg in t:
@@ -275,7 +346,7 @@ def error_pattern_resolver(target, actual, pattern):
                         dist_second = (dist, pair)
         return (dist_first[1], dist_second[1])
     
-    if pattern == 'substitution_other' and len(t)==3:
+    if pattern == 'NOT USED substitution' and len(t)==3:
         dist_first = (1, ())
         dist_second = (1, ())
         dist_third = (1, ())
@@ -313,6 +384,8 @@ def error_pattern_resolver(target, actual, pattern):
                             else:
                                 dist_third = (dist, pair)            
         return (dist_first[1], dist_second[1], dist_third[1])
+    
+    return None, None
     
 
 result = error_pattern_resolver(target, actual, pattern)
@@ -411,7 +484,7 @@ def error_quantifier(x, full_correct_value=1, full_deletion_value=0,
     return score
 
 
-def error_patterns_table(input_filename, score_column=True, resolver=False):
+def error_patterns_table(input_filename, score_column=True, resolver=True):
     """
     Generates error patterns for a dataset of transcriptions.
     
@@ -453,9 +526,13 @@ def error_patterns_table(input_filename, score_column=True, resolver=False):
         resolved_error_list = []
         counter = 0
         for index, target, actual, pattern in error_patterns_df[['IPA Target', 'IPA Actual', 'error_pattern']].itertuples():            
-            resolved_error_list.append(error_pattern_resolver(target, actual, pattern))
+            if "substitution_other" in pattern:
+                resolved_error_list.append(error_pattern_resolver(target, actual, pattern)[0])
+            else:
+                resolved_error_list.append('')
             counter+=1
-            print(f"Resolved {counter} out of {length}")
+            if counter % 1000 == 0:
+                print(f"Resolved {counter} out of {length}")
         error_patterns_df['resolved_error'] = resolved_error_list
     error_patterns_df.to_csv(output_filename, encoding='utf-8', index=False, na_rep='')
     print(f"Error patterns saved to {output_filename}")
