@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
+Functions for identifying and extracting diacritics.
+
 Created on Tue Aug  4 17:09:45 2020
 @author: Philip
 """
 
 import csv
 import regex as re
-import panphon
-ft = panphon.FeatureTable()
 
 def reDiac(diacritic_key="Phon"): 
     """   

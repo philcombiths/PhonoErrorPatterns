@@ -1,13 +1,29 @@
 # -*- coding: utf-8 -*-
 """
+error_patterns version 0.1
+
+Created on Tue Jul 28 14:58:21 2020
+@author: Philip Combiths
+
 From IPA target and actual transcriptions, generates error pattern labels with
 error_pattern() for a single pair of transcriptions or error_pattern_table()
-for a dataset of transcription pairs. error_quantifier() may be used to convert
-error pattern str labels to numeric values.
+for a dataset of transcription pairs. 
+
+error_pattern_resolver() takes a second pass through transcriptions with a more
+sophisticated algorithm to resolve patterns labelled with "_other". This may be
+a better algorithm to replace error_pattern() in future update. Currently only
+works as expected for CC substitution and epenthesis patterns.
+
+error_quantifier() may be used to convert error pattern str labels to numeric 
+values.
+
+error_patterns_table uses these functions in sequence and exports result to 
+csv.
 
 Note: Check function docstrings for valid phonological types.
+Note: This script uses panphon package.
 
-Setup Procedures:
+Panphon Setup Procedures:
 1. Install or verify installation of panphon in the current python environment:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
 2. Use extract_diacritics() to derive list of unique diacritics in dataset.
@@ -19,17 +35,24 @@ Setup Procedures:
 5. Copy 'ipa_all.csv' and paste into the panphon/data directory in the
     current python environment 
     (e.g., 'C:/Users/Philip/Anaconda3/Lib/site-packages/panphon/data')
+
+    David R. Mortensen, Patrick Littell, Akash Bharadwaj, Kartik Goyal, 
+        Chris Dyer, Lori Levin (2016). "PanPhon: A Resource for Mapping IPA 
+        Segments to Articulatory Feature Vectors." Proceedings of COLING 2016, 
+        the 26th International Conference on Computational Linguistics: 
+        Technical Papers, pages 3475–3484, Osaka, Japan, December 11-17 2016.
     
-Example use case:
-result = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_c.csv")            
-    
-Created on Tue Jul 28 14:58:21 2020
-@author: Philip Combiths
+# Example use case:
+result = error_patterns_table("...microdata_c.csv")
+
+# Debug Testing
+test_cases = import_test_cases()
+test_result = debug_testing(test_cases)
+
 """
 
 import pandas as pd
 import numpy as np
-from collections import OrderedDict
 import io
 from diacritics import reDiac, extract_diacritics
 from ph_element import ph_element, ph_segment, ph_cluster
@@ -51,6 +74,7 @@ def error_pattern(target, actual, debug=False):
     
     *Currently only tested for reliability with C and CC clusters.
     *CCC cluster epenthesis requires revision.
+    *May replace this function with error_pattern_resolver()
     
     TO DO: fix issue: multiple actual segments whose smallest distance indicates
         substitution with the same target consonant.
@@ -65,13 +89,11 @@ def error_pattern(target, actual, debug=False):
     # Workarounds    
     # Sub ᵊ with ə for easier epenthesis ID
     if 'ᵊ' in actual:
-        actual = actual.replace('ᵊ', 'ə')
-    
+        actual = actual.replace('ᵊ', 'ə')    
     # Recognize ∅ as empty / deletion error
     if actual == '∅':
         error = "deletion"
-        return error
-    
+        return error    
     # Recognize 'nan' as empty / deletion error
     if actual == 'nan':
         error = "deletion"
@@ -83,35 +105,28 @@ def error_pattern(target, actual, debug=False):
     t_fts = ft.word_fts(target)
     a_segs = ft.ipa_segs(actual)
     a_fts = ft.word_fts(actual)
-    t_dict = OrderedDict(zip(t_segs, t_fts))
-    a_pairs = list(zip(a_segs, a_fts))
-                    
+    a_pairs = list(zip(a_segs, a_fts))                    
     # Deletion
     if a_segs == ['∅'] or len(a_segs) == 0:
         error = 'deletion'
-        return error
-    
+        return error    
     # Accurate
     if t_segs == a_segs:
         error = 'accurate'
-        return error
-    
+        return error    
     # Errors by target structure type
     assert len(target) > 0, "target must be len>0"
     # assert no vowels
     if len(target) == 1:
-        structure = "C"
-        
+        structure = "C"       
         # Substitution
         if len(t_segs) == len(a_segs):
             error = "substitution"
-            return error
-        
+            return error        
         # All other errors
         else:
             error = "other"
-            return error
-                
+            return error               
     if 2 <= len(target) <= 3 :        
         # Epenthesis
         for seg in a_pairs:       
@@ -162,10 +177,9 @@ def error_pattern(target, actual, debug=False):
                     if smallest_dist[0] == 1:# and 'C2' not in error:
                         error = error+'-C2sub' 
                     if smallest_dist[0] == 2:# and 'C3' not in error:
-                        error = error+'-C3sub'
-
-            
-            ### CHECK FOR multiple assignments to a single target consonant
+                        error = error+'-C3sub'           
+            # Label attempts to make multiple assignments to a single segment
+            # with "other". These will be analyzed by error_pattern_resolver()
             for i in range(len(t_segs)):
                 if error.count(f'C{i+1}') > 1:
                     # DEBUG
@@ -174,7 +188,7 @@ def error_pattern(target, actual, debug=False):
                     else:
                         error = error.split('-')[0]+'_other'
                     return error
-            # RIGHT NOW THIS ADDS "DEL" WHEN multiple assignments made
+            # Add deletions for segments not identified above
             if error == 'substitution_other':
                 pass
             else:
@@ -182,8 +196,6 @@ def error_pattern(target, actual, debug=False):
                     if f'C{i+1}' not in error:
                         error = error+f'-C{i+1}del'
                    
-            # Removes duplicates right now.
-            #error = error.split('-')[0]+'-'+'-'.join(sorted(set(error.split('-')[1:])))
             error = error.split('-')[0]+'-'+'-'.join(sorted(error.split('-')[1:]))           
             return error
         
@@ -199,232 +211,120 @@ def error_pattern(target, actual, debug=False):
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
         
 
-#target='rj'
-#actual='ɡaj'
-#pattern='epenthesis_other'
-
-target='ʝw'
-actual='mj'
-pattern='substitution_other'
-
-
-
-
-
-
-
-
 
 def error_pattern_resolver(target, actual, pattern):
+    """
+    A revised version of error_pattern() with a more sophisticated algorithm
+    using ph_segment and ph_cluster classes and creating a matrix of distances
+    to determine phonological error patterns. Current usage is only for CC
+    epenthesis and substitution patterns already identified as "_other" by
+    error_pattern()
     
+    Args:
+        target : str of consonant or consonant sequence
+        actual : str of consonant or consonant sequence
+        pattern : str of error pattern produced by error_pattern()
+    
+    Returns: tuple (str [error pattern], list[alignment]/None)
+    
+    Note: Future updates may replace error_pattern() with 
+        error_pattern_resolver()
+    """
     t = ph_element(target, 'target').convert_type()
     a = ph_element(actual, 'actual').convert_type()
-        
-    ### NOT WORKING. NEED TO FIND SOLUTION SO THAT THE ORDER IN WHICH 
-    ### BEST PAIRS ARE FOUND DOESN'T MATTER.
-    ## Could keep a list of all possible combinations and iterate through them to find
-    ## the best ones. 
     
-    ### Possible Solution:
-    """
-    1.Get the smallest group of pairs
-    2.Check that segment positions do not overlap for any of them.
-    3.If so, remove the largest of the overlapping segments
-    4.Bring next smallest pair
-    5.Repeat check for segment overlap
-    6.Continue until the smallest group is found with no segment overlap
-    7.Create expection for cases of assimilation
-    """
-    
-    if pattern == 'substitution_other' and len(t)==2:
-        # Create target-actual feature distance matrix
+    # Does not analyze singletons, reduction patterns, or CC+ clusters        
+    error = ''
+    if pattern == 'reduction_other':
+        error = 'reduction_other'
+        return error, None    
+    if len(t) !=2:
+        return error, None    
+    if pattern =='epenthesis_other':
+        error = 'epenthesis'
+        if len(a) > 2:
+            a_epenthesized = a[1]
+        a_cons_only = []
+        for seg in a:
+            if ('syl', 1) in seg.fts.items():
+                continue
+            else:
+                a_cons_only.append(seg)
+        a = a_cons_only
+        if len(a) > 2:
+            return error+'_other', None
+    else:
+        if len(a) > 2:
+            error = 'insertion_other'
+            return error, None       
+    if pattern == 'substitution_other' and len(t)==2 and len(a)==2:
         error = 'substitution'
-        index = pd.Series([x for x in a])
-        cols = pd.Series([x for x in t])        
-        dist_matrix = pd.DataFrame(index.apply(
-                lambda x: cols.apply(lambda y: x.fts-y.fts)))
-        dist_matrix.index = index
-        dist_matrix.columns = cols
-        # When target and actual are same length, give a bonus to scores that
-        # match relative position in the cluster
-        position_match_bonus = -0.1
-        if len(t) == len(a):
-            for i in range(len(t)):
-                dist_matrix.iloc[i,i] += position_match_bonus       
-        # For each row in first dist_matrix column (T1) iterate over possible
-        # valid alignment combinations.
-        col1 = dist_matrix.iloc[:,0]
-        options = []
-        for a1, dist1 in enumerate(col1):
-            option = []
-            t1 = (dist1, a1)
-            option.append(t1)
-            for i in range(1, len(t)):
-                for a, dist in enumerate(dist_matrix.iloc[:,i]):
-                    if a == a1:
-                        continue
-                    else:
-                        t = (dist, a)
-                        option.append(t)
-            options.append(option)           
-        # Compare options to ensure non-overlap in positions.
-        for i_op in range(1, len(options)):  
-            for i_seg in range(len(options[0])):    
-                if options[0][i_seg][1] == options[i_op][i_seg][1]:
-                    raise Exception
-        # Determine best segment alignment pairings
-        distances = [sum([x[0] for x in option]) for option in options]
-        distance_array = np.array(distances)
-        best_dist = (min(distances), distances.index(min(distances)))
-        if len(np.where(distance_array == best_dist[0])[0]) > 1:
-            raise Exception("multiple ideal alignments found")        
-        best_option = options[best_dist[1]]
-        alignment = []
-        for i, seg in enumerate(best_option):
-            col_index = i
-            row_index = seg[1]
-            value = dist_matrix.iloc[row_index, col_index]
-            targ = dist_matrix.iloc[:,col_index].name
-            act = dist_matrix.iloc[row_index].name
-            pair = (targ, act, value)            
-            alignment.append(pair)            
-        # Assign segment-by-segment patterns to error string
-        for i, seg in enumerate(alignment):
-            if seg[2] == 0:
-                error += f"-C{i+1}pres"
-            elif seg[2] > 0:
-                error += f"-C{i+1}sub"
-        return error, alignment
-            
-    ### Not working because works in only one direction....
-    if pattern == 'NOT USED epenthesis':
-        dist_first = (10, ())
-        dist_second = (10, ())
-        for tseg in t:
-            cur_t_seg = tseg.string
-            for aseg in a:
-                if aseg.type == 'vowel':
+
+    # Create target-actual feature distance matrix
+    index = pd.Series([x for x in a])
+    cols = pd.Series([x for x in t])        
+    dist_matrix = pd.DataFrame(index.apply(
+            lambda x: cols.apply(lambda y: x.fts-y.fts)))
+    dist_matrix.index = index
+    dist_matrix.columns = cols
+    # When target and actual are same length, give a bonus to scores that
+    # match relative position in the cluster
+    position_match_bonus = -0.1
+    if len(t) == len(a):
+        for i in range(len(t)):
+            dist_matrix.iloc[i,i] += position_match_bonus
+            if dist_matrix.iloc[i,i] < 0:
+                dist_matrix.iloc[i,i] = 0
+    # For each row in first dist_matrix column (T1) iterate over possible
+    # valid alignment combinations.
+    col1 = dist_matrix.iloc[:,0]
+    options = []
+    for a1, dist1 in enumerate(col1):
+        option = []
+        t1 = (dist1, a1)
+        option.append(t1)
+        for i in range(1, len(t)):
+            for a_i, dist in enumerate(dist_matrix.iloc[:,i]):
+                if a_i == a1:
                     continue
-                cut_a_seg = aseg.string
-                pair = (tseg, aseg)
-                dist = tseg.fts()-aseg.fts()
-                if dist < dist_first[0]:
-                    dist_second = dist_first
-                    dist_first = (dist, pair)
-                elif dist < dist_second[0]:
-                    # Skip combinations with a segment already assigned to the
-                    # best combination
-                    if pair[0].position == dist_first[1][0].position:
-                        continue
-                    if pair[1].position == dist_first[1][1].position+1:
-                        continue
-                    else:
-                        dist_second = (dist, pair)
-        return (dist_first[1], dist_second[1])        
-    
-    # For CC subsitutitons
-    if pattern == 'NOT USED substitution' and len(t)==2:
-        dist_first = (1, ())
-        dist_second = (1, ())
-        for tseg in t:
-            cur_t_seg = tseg.string
-            for aseg in a:
-                cut_a_seg = aseg.string
-                pair = (tseg, aseg)
-                dist = tseg.fts()-aseg.fts()
-                if dist < dist_first[0]:
-                    dist_second = dist_first
-                    dist_first = (dist, pair)
-                elif dist < dist_second[0]:
-                    # Skip combinations with a segment already assigned to the
-                    # best combination
-                    if pair[0].position == dist_first[1][0].position:
-                        continue
-                    if pair[1].position == dist_first[1][1].position:
-                        continue
-                    else:
-                        dist_second = (dist, pair)
-        return (dist_first[1], dist_second[1])
-    
-    if pattern == 'NOT USED substitution' and len(t)==3:
-        dist_first = (1, ())
-        dist_second = (1, ())
-        dist_third = (1, ())
-        for tseg in t:
-            cur_t_seg = tseg.string
-            for aseg in a:
-                cut_a_seg = aseg.string
-                pair = (tseg, aseg)
-                dist = tseg.fts()-aseg.fts()
-                if dist < dist_first[0]:
-                    dist_second = dist_first
-                    dist_third = dist_second
-                    dist_first = (dist, pair)
                 else:
-                    if dist < dist_second[0]:
-                        # Skip combinations with a segment already assigned to the
-                        # best combination
-                        if pair[0].position == dist_first[1][0].position:
-                            continue
-                        if pair[1].position == dist_first[1][1].position:
-                            continue
-                        else:
-                            dist_third = dist_second
-                            dist_second = (dist, pair)
-                    else:                        
-                        if dist < dist_third[0]:                            
-                            # Skip combinations with a segment already assigned to the
-                            # best combination
-                            if pair[0].position == dist_first[1][0].position:
-                                if pair[0].position == dist_second[1][0].position:
-                                    continue
-                            if pair[1].position == dist_first[1][1].position:
-                                if pair[1].position == dist_second[1][1].position:
-                                    continue
-                            else:
-                                dist_third = (dist, pair)            
-        return (dist_first[1], dist_second[1], dist_third[1])
-    
-    return None, None
-    
-
-result = error_pattern_resolver(target, actual, pattern)
-    
-    
-    
-    
-#    # Steps for "other errors"
-#    # If 'pres' in C#:
-#    if pattern == 'substitution_other':
-#        # Create a T:A pair
-#        for i_t, t in enumerate(t_pairs):
-#            for i_a, a in enumerate(a_pairs):
-#                cur_pair = ((t[0], i_t), a[0])
-#                cur_dist = t[1]-a[1]
-#                pair_value = (cur_dist, cur_pair)
-#                
-#                
-#
-#    index = 0
-#    smallest_dist = (index, 1)
-#    for t_ft in t_fts:                        
-#        dist = t_ft-seg[1]                            
-#        # doesn't count equal segments in distance
-#        if 0 < dist < smallest_dist[1]:
-#            smallest_dist = (index, dist)
-#        index += 1
-#    if smallest_dist[0] == 0: # and 'C1' not in error:
-#        error = error+'-C1sub'
-#    if smallest_dist[0] == 1:# and 'C2' not in error:
-#        error = error+'-C2sub' 
-#    if smallest_dist[0] == 2:# and 'C3' not in error:
-#        error = error+'-C3sub'
-
-
-    
-    #   C#(other) = C#(missing)
-    # Else:
-    #    try all combinations of pairings to find the shortest configuration    
+                    t_i = (dist, a_i)
+                    option.append(t_i)
+        options.append(option)           
+    # Compare options to ensure non-overlap in positions.
+    for i_op in range(1, len(options)):  
+        for i_seg in range(len(options[0])):    
+            if options[0][i_seg][1] == options[i_op][i_seg][1]:
+                print(f"{t}, {a}, {pattern}")
+                raise Exception
+    # Determine best segment alignment pairings
+    distances = [sum([x[0] for x in option]) for option in options]
+    distance_array = np.array(distances)
+    best_dist = (min(distances), distances.index(min(distances)))
+    if len(np.where(distance_array == best_dist[0])[0]) > 1:
+        raise Exception("multiple ideal alignments found")        
+    best_option = options[best_dist[1]]
+    alignment = []
+    for i, seg in enumerate(best_option):
+        col_index = i
+        row_index = seg[1]
+        value = dist_matrix.iloc[row_index, col_index]
+        targ = dist_matrix.iloc[:,col_index].name
+        act = dist_matrix.iloc[row_index].name
+        pair = (targ, act, value)            
+        alignment.append(pair)            
+    # Assign segment-by-segment patterns to error string
+    for i, seg in enumerate(alignment):
+        if seg[2] > 0:
+            error += f"-C{i+1}sub"
+        elif seg[2] == 0:
+            # Check if IPA segments are equal in addition to 0 distance
+            if seg[0].ipa != seg[1].ipa or seg[0].string != seg[1].string:
+                # Distance = 0, but segments are different. Review these.
+                error +=f"-C{i+1}sub[CHECK]"
+            else:
+                error += f"-C{i+1}pres"
+    return error, alignment
 
 
 def error_quantifier(x, full_correct_value=1, full_deletion_value=0, 
@@ -447,6 +347,8 @@ def error_quantifier(x, full_correct_value=1, full_deletion_value=0,
     
     Returns float error pattern score.
     """
+    if x == None:
+        x = ''
     x_list = [x.split('-')[0], x.split('-')[1:]]
     x_len = len(x_list[1])
     score = 0
@@ -500,7 +402,6 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
     Returns:
         DataFrame with IPA Actual, IPA Target, and 'error_pattern' columns
     """
-
     data = pd.read_csv(input_filename, low_memory=False)    
     # Columns (5,10,13,14,15,30,38,39) have mixed types.    
     data['IPA Actual'] = data['IPA Actual'].astype('str')    
@@ -520,13 +421,11 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
     output_filename = 'error_patterns.csv'
     error_patterns_df = error_patterns_df.merge(error_patterns_series, left_index=True, right_index=True)
     error_patterns_df['error_basic'] = error_patterns_df['error_pattern'].apply(lambda x: x.split('-')[0])
-    if score_column:
-        error_patterns_df['error_score'] = error_patterns_df['error_pattern'].apply(error_quantifier)
     if resolver:
         resolved_error_list = []
         counter = 0
         for index, target, actual, pattern in error_patterns_df[['IPA Target', 'IPA Actual', 'error_pattern']].itertuples():            
-            if "substitution_other" in pattern:
+            if "other" in pattern:
                 resolved_error_list.append(error_pattern_resolver(target, actual, pattern)[0])
             else:
                 resolved_error_list.append('')
@@ -534,12 +433,17 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
             if counter % 1000 == 0:
                 print(f"Resolved {counter} out of {length}")
         error_patterns_df['resolved_error'] = resolved_error_list
+        error_patterns_df['error_pattern'].loc[error_patterns_df['resolved_error'] != ''] = error_patterns_df['resolved_error']
+    if score_column:
+        error_patterns_df['error_score'] = error_patterns_df['error_pattern'].apply(error_quantifier)
+        
     error_patterns_df.to_csv(output_filename, encoding='utf-8', index=False, na_rep='')
     print(f"Error patterns saved to {output_filename}")
     return error_patterns_df
 
+
 def import_test_cases(test_cases='test_cases.txt'):
-    """From a txt file, import a list of test cases."""
+    """From txt file, import list of test cases for use with debug_testing()"""
     
     test_cases = []
     with io.open('test_cases.txt', encoding='utf-8', mode="r") as f:
@@ -564,6 +468,7 @@ def import_test_cases(test_cases='test_cases.txt'):
     
     return test_cases
     
+
 def debug_testing(test_cases_list):
     """from result of import_text_case() get error_pattern() results."""
     for group in test_cases_list:
@@ -573,27 +478,3 @@ def debug_testing(test_cases_list):
             result_list = [[x[0], x[1]] for x in zip(group[1], group[2])]
         group.append(result_list)
     return test_cases_list
-
-     
-# Final Result Generation
-result = error_patterns_table("G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_c.csv")
-
-# Debug Testing
-#result = import_test_cases()
-#result = debug_testing(result)
-    
-res = error_pattern('ʝw','jan', debug=True)
-
-            
-
-#pattern = reDiac()
-#
-#
-#with open(r"C:\Users\Philip\Documents\GitHub\panphon\panphon\data\diacritic_definitions.yml", mode='r', encoding='utf-8') as f:
-#    text = f.read()
-#
-#diacritics_to_add = []
-#for x in result:
-#    if x not in text:
-#        diacritics_to_add.append(x)
-        
