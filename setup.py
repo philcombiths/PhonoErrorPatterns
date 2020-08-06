@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-	name='phono_error_patterns',
+	name='PhonoErrorPatterns',
 	version='0.1',
 	packages=['error_patterns',],
 	license='Apache License, Version 2.0',
