@@ -478,3 +478,5 @@ def debug_testing(test_cases_list):
             result_list = [[x[0], x[1]] for x in zip(group[1], group[2])]
         group.append(result_list)
     return test_cases_list
+
+result = error_patterns_table(r"G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_e.csv")

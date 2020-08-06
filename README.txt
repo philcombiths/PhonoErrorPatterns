@@ -1,16 +1,25 @@
-# Author
-Philip Combiths
+===========
+Phono Error Patterns
+===========
+Phono Error Patterns identifies error patterns from phonological transcriptions.
 
-# Date
-7/30/2020
-
-# phono_error_patterns
-Identifies error patterns from phonological transcriptions.
-
-From IPA target and actual transcriptions, generates error pattern labels with
-error_pattern() for a single pair of transcriptions or error_pattern_table()
+Specifically, from IPA target and actual transcriptions, generates error pattern 
+labels with error_pattern() for a single pair of transcriptions or error_pattern_table()
 for a dataset of transcription pairs. 
 
+Note: Check function docstrings for valid phonological types.
+Note: This script uses panphon package.
+
+Typical usage::
+    # Example use case:
+    result = error_patterns_table("...microdata_c.csv")
+
+    # Debug Testing
+    test_cases = import_test_cases()
+    test_result = debug_testing(test_cases) 
+
+Functions
+=========
 error_pattern_resolver() takes a second pass through transcriptions with a more
 sophisticated algorithm to resolve patterns labelled with "_other". This may be
 a better algorithm to replace error_pattern() in future update. Currently only
@@ -22,10 +31,8 @@ values.
 error_patterns_table uses these functions in sequence and exports result to 
 csv.
 
-Note: Check function docstrings for valid phonological types.
-Note: This script uses panphon package.
-
-Panphon Setup Procedures:
+Panphon Setup Procedures
+=========
 1. Install or verify installation of panphon in the current python environment:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
 2. Use extract_diacritics() to derive list of unique diacritics in dataset.
@@ -38,16 +45,18 @@ Panphon Setup Procedures:
     current python environment 
     (e.g., 'C:/Users/Philip/Anaconda3/Lib/site-packages/panphon/data')
 
-    David R. Mortensen, Patrick Littell, Akash Bharadwaj, Kartik Goyal, 
-        Chris Dyer, Lori Levin (2016). "PanPhon: A Resource for Mapping IPA 
-        Segments to Articulatory Feature Vectors." Proceedings of COLING 2016, 
-        the 26th International Conference on Computational Linguistics: 
-        Technical Papers, pages 3475–3484, Osaka, Japan, December 11-17 2016.
-    
-# Example use case:
-result = error_patterns_table("...microdata_c.csv")
+David R. Mortensen, Patrick Littell, Akash Bharadwaj, Kartik Goyal, 
+	Chris Dyer, Lori Levin (2016). "PanPhon: A Resource for Mapping IPA 
+	Segments to Articulatory Feature Vectors." Proceedings of COLING 2016, 
+	the 26th International Conference on Computational Linguistics: 
+	Technical Papers, pages 3475–3484, Osaka, Japan, December 11-17 2016.
 
-# Debug Testing
-test_cases = import_test_cases()
-test_result = debug_testing(test_cases) 
- 
+Version
+=========
+0.1
+
+
+License
+========
+Apache License 2.0
+Copyright 2020 Philip Combiths
