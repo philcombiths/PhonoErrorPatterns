@@ -21,7 +21,7 @@ error_patterns_table uses these functions in sequence and exports result to
 csv.
 
 Note: Check function docstrings for valid phonological types.
-Note: This script uses panphon package.
+Note: This script uses objects from panphon package.
 
 Panphon Setup Procedures:
 1. Install or verify installation of panphon in the current python environment:
