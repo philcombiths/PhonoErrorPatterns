@@ -2,12 +2,19 @@
 """
 Functions for identifying and extracting diacritics.
 
+Usage with panphon / error_patterns.py:
+1. Copy all IPA actual transcriptions to be used. Must be copied from a single
+   column of a spreadsheet.
+2. Execute diacritic
+
 Created on Tue Aug  4 17:09:45 2020
 @author: Philip
 """
 
 import csv
 import regex as re
+import os
+import pandas.io.clipboard as pyperclip
 
 def reDiac(diacritic_key="Phon"): 
     """   
@@ -43,6 +50,8 @@ def reDiac(diacritic_key="Phon"):
         phon_diacritics = [x[0] for x in file]
         
     phon_diacritics = ["\\"+x if x in regex_special_chars else x for x in phon_diacritics]
+    
+    # Apply specified diacritics key
     if diacritic_key == "Phon":
         pattern = r'(' + r'|'.join(phon_diacritics) + r')'
     if diacritic_key == "unicode_blocks":
@@ -52,8 +61,7 @@ def reDiac(diacritic_key="Phon"):
     pattern = re.compile(pattern)    
     return pattern
 
-
-def extract_diacritics(join=True):    
+def extract_diacritics(join=True, from_clipboard=True):    
     """
     Extracts unique diacritics from a pasted column of IPA transcriptions.
     
@@ -68,9 +76,13 @@ def extract_diacritics(join=True):
     Returns list of unique str diacritics.
     """    
     res = []
-    trans_col = input('Paste column of entries:')
+    if from_clipboard:
+        trans_col = os.path.normpath(pyperclip.paste().strip())
+    else:
+        trans_col = input('Paste column of entries:')
     trans_col_list = trans_col.split("\n")
     for transcription in trans_col_list:
+        # Find all diacritics using Phon reference list
         diacritics = re.findall(reDiac(), transcription)
         if len(diacritics) == 0:
             continue
@@ -82,3 +94,5 @@ def extract_diacritics(join=True):
                 for d in diacritics:
                     res.append(d)
     return list(set(res))
+
+pyperclip.copy(extract_diacritics().join('\t'))
