@@ -29,7 +29,7 @@ Panphon Setup Procedures:
 2. Use extract_diacritics() to derive list of unique diacritics in dataset.
     - Requires transcriptions in a single column.
 3. Update diacritic_definitions.yml in panphon/data with any diacritics
-    not already in definitions.
+    not already in definitions. This is done manually currently.
 4. Run command line from panphon directory to update definitions:
     'python bin/generate_ipa_all.py data/ipa_bases.csv -d data/diacritic_definitions.yml -s data/sort_order.yml data/ipa_all.csv'
 5. Copy 'ipa_all.csv' and paste into the panphon/data directory in the
