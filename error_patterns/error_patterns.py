@@ -46,17 +46,21 @@ Panphon Setup Procedures:
 result = error_patterns_table("...microdata_c.csv")
 
 # Debug Testing
+1. Edit test cases in test_cases.txt
+2. Execute:
 test_cases = import_test_cases()
 test_result = debug_testing(test_cases)
 
 """
 
+from smtpd import DebuggingServer
 import pandas as pd
 import numpy as np
 import io
 from diacritics import reDiac, extract_diacritics
 from ph_element import ph_element, ph_segment, ph_cluster
 import panphon
+import os
 ft = panphon.FeatureTable()
     
 
@@ -78,6 +82,7 @@ def error_pattern(target, actual, debug=False):
     
     TO DO: fix issue: multiple actual segments whose smallest distance indicates
         substitution with the same target consonant.
+    TO DO: Fix issue: Affricates are scored unexpectedly as deletions.
     TO DO: Could determine instances that still count as "present" instead of 
         substitution: e.g., "kʴ" for "kr".
     TO DO: Specify vocalization substitution pattern
@@ -448,15 +453,24 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
 
 
 def import_test_cases(test_cases='test_cases.txt'):
-    """From txt file, import list of test cases for use with debug_testing()"""
-    
+    """From txt file, import list of test cases for use with debug_testing()
+
+    Args:
+        test_cases (str, optional): filename/path of input text with test 
+        cases. Defaults to 'test_cases.txt'.
+
+    Returns:
+        list: Test cases in a list of lists for debug_testing()
+    """    
+    # Accepts ["epenthesis_other", "other", "reduction_other", "substitution_other"]
+    # sections in text doc
     test_cases = []
     with io.open('test_cases.txt', encoding='utf-8', mode="r") as f:
         txt = f.readlines()    
-    txt = [line.strip() for line in txt]
-    txt = [line for line in txt if line]
-    epenthesis_other = txt[txt.index('epenthesis_other:')+1:txt.index('other:')]
-    epenthesis_other = [x.split('	') for x in epenthesis_other]
+    txt = [line.strip() for line in txt] # Strip white space on lines
+    txt = [line for line in txt if line] # Remove empty lines
+    epenthesis_other = txt[txt.index('epenthesis_other:')+1:txt.index('other:')] # Extract section
+    epenthesis_other = [x.split('	') for x in epenthesis_other] # Split Target and Actual
     test_cases.append(['epenthesis_other', epenthesis_other])
     
     other = txt[txt.index('other:')+1:txt.index('reduction_other:')]
@@ -467,21 +481,61 @@ def import_test_cases(test_cases='test_cases.txt'):
     reduction_other = [x.split('	') for x in reduction_other]
     test_cases.append(['reduction_other', reduction_other])
 
-    substitution_other = txt[txt.index('substitution_other:')+1:]
+    substitution_other = txt[txt.index('substitution_other:')+1:txt.index('unknown:')]
     substitution_other = [x.split('	') for x in substitution_other]
     test_cases.append(['substitution_other', substitution_other])
-    
+
+    unknown = txt[txt.index('unknown:')+1:txt.index('accurate:')] # name in txt can't be "other". Use "unknown"
+    unknown = [x.split('	') for x in unknown]
+    test_cases.append(['unknown', unknown])
+
+    accurate = txt[txt.index('accurate:')+1:txt.index('deletion:')]
+    accurate = [x.split('	') for x in accurate]
+    test_cases.append(['accurate', accurate])
+
+    deletion = txt[txt.index('deletion:')+1:]
+
+    deletion = [x.split('	') for x in deletion]
+    # Add empty string for line with blank IPA Actual
+    # Append modifies list directly. Don't need to assign to variable
+    [x.append('') for x in deletion if len(x)==1] 
+    test_cases.append(['deletion', deletion])
+
     return test_cases
     
 
 def debug_testing(test_cases_list):
-    """from result of import_text_case() get error_pattern() results."""
+    """From import_test_cases() test error patterns and export to csv
+
+    Args:
+        test_cases_list list: Must come from import_test_cases()
+
+    Returns:
+        list: Complex embedded list. Each item is a subsection of tested items.
+    """    
     for group in test_cases_list:
         group.append([])
         for item in group[1]:
             group[2].append(error_pattern(item[0], item[1], debug=True))
             result_list = [[x[0], x[1]] for x in zip(group[1], group[2])]
         group.append(result_list)
-    return test_cases_list
+    result_list = [(x[0], pd.DataFrame(x[3])) for x in test_cases_list]
+    for i in result_list:
+        try:
+            i[1].to_csv(os.path.join('debug_results', i[0]+'.csv'), encoding='utf-8')
+        except FileNotFoundError:
+            os.mkdir('debug_results')
+            i[1].to_csv(os.path.join('debug_results', i[0]+'.csv'), encoding='utf-8')
+    """
+    # Result is list of lists. Each list is a subsection of test items.
+    # Within each subsection, list in format [0, 1]:
+    0 = Group title from input
+    1 = Pandas dataframe with a) IPA input and b) derived error patterns
+    """
+    return result_list
 
-result = error_patterns_table(r"C:\Users\pcombiths\OneDrive - University of Iowa\CLD Lab\CLD Lab\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
+
+test_cases = import_test_cases()
+test_result = debug_testing(test_cases)
+pass
+# result = error_patterns_table(r"C:\Users\pcombiths\OneDrive - University of Iowa\CLD Lab\CLD Lab\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
