@@ -26,14 +26,14 @@ Note: This script uses objects from panphon package.
 Panphon Setup Procedures:
 1. Install or verify installation of panphon in the current python environment:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
-2. Use extract_diacritics() to derive list of unique diacritics in dataset.
+2. Use gen_text_diacritic_definitions() to derive list of unique diacritics in dataset.
     - Requires transcriptions in a single column.
-3. Update diacritic_definitions.yml in panphon/data with any diacritics
-    not already in definitions. This is done manually currently.
-4. Run command line from panphon directory to update definitions:
+3. Paste output from 2. into diacritic_definitions.yml
+4. Run command line from panphon\panphon directory to update definitions:
+    SHIFT + Right-click > Open PowerShell from here
     'python bin/generate_ipa_all.py data/ipa_bases.csv -d data/diacritic_definitions.yml -s data/sort_order.yml data/ipa_all.csv'
 5. Copy 'ipa_all.csv' and paste into the panphon/data directory in the
-    current python environment 
+    current python environment (if not already in current environment)
     (e.g., 'C:/Users/Philip/Anaconda3/Lib/site-packages/panphon/data')
 
     David R. Mortensen, Patrick Littell, Akash Bharadwaj, Kartik Goyal, 
@@ -43,7 +43,7 @@ Panphon Setup Procedures:
         Technical Papers, pages 3475–3484, Osaka, Japan, December 11-17 2016.
     
 # Example use case:
-result = error_patterns_table("...microdata_c.csv")
+result = error_patterns_table("...microdata_c.csv") # include csv of 
 
 # Debug Testing
 test_cases = import_test_cases()
@@ -54,7 +54,7 @@ test_result = debug_testing(test_cases)
 import pandas as pd
 import numpy as np
 import io
-from diacritics import reDiac, extract_diacritics
+# from diacritics import reDiac, extract_diacritics, update_panphon_diacritics
 from ph_element import ph_element, ph_segment, ph_cluster
 import panphon
 ft = panphon.FeatureTable()
@@ -81,7 +81,7 @@ def error_pattern(target, actual, debug=False):
     TO DO: Could determine instances that still count as "present" instead of 
         substitution: e.g., "kʴ" for "kr".
     TO DO: Specify vocalization substitution pattern
-        
+    TO DO: Automate process of updating diacritic_definitions.yml
     """   
     error = None
     
@@ -441,6 +441,14 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
     print(f"Error patterns saved to {output_filename}")
     return error_patterns_df
 
+def gen_text_diacritic_definitions():
+    """Generate text to update diacritic_definitions for panphon.
+
+    Returns:
+        str: Text to paste into diacritic_definitions.yml
+    """
+    return update_panphon_diacritics()
+
 
 def import_test_cases(test_cases='test_cases.txt'):
     """From txt file, import list of test cases for use with debug_testing()"""
@@ -478,5 +486,5 @@ def debug_testing(test_cases_list):
             result_list = [[x[0], x[1]] for x in zip(group[1], group[2])]
         group.append(result_list)
     return test_cases_list
-
-result = error_patterns_table(r"G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_e.csv")
+result = error_patterns_table(r"C:\Users\pcombiths\Documents\GitHub\PhonoErrorPatterns\error_patterns\ph-II_sp-en-merged_REV.csv")
+# result = error_patterns_table(r"G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_e.csv")

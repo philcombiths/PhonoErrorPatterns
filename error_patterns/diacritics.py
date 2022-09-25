@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-Functions for identifying and extracting diacritics.
+Functions for identifying and extracting diacritics. Also used in conjunction
+with PhonoErrorPatterns to add diacritics from the analysis data to
+diacritic_definitions.yml
 
 Usage with panphon / error_patterns.py:
 1. Copy all IPA actual transcriptions to be used. Must be copied from a single
    column of a spreadsheet.
-2. Execute diacritic
+2. Execute update_panphon_diacritics()
 
 Created on Tue Aug  4 17:09:45 2020
 @author: Philip
 """
 
 import csv
+from tokenize import StringPrefix
 import regex as re
 import os
 import pandas.io.clipboard as pyperclip
@@ -86,7 +89,7 @@ def extract_diacritics(join=True, from_clipboard=True, to_clipboard=True):
     """    
     res = []
     if from_clipboard:
-        trans_col = pyperclip.paste().strip()
+        trans_col = pyperclip.paste().strip('(').strip(')')
     else:
         trans_col = input('Paste column of entries:')
     trans_col_list = trans_col.split("\n")
@@ -107,8 +110,6 @@ def extract_diacritics(join=True, from_clipboard=True, to_clipboard=True):
         pyperclip.copy('\t'.join(extracted_diacritics_list))
     print(extracted_diacritics_list)
     return extracted_diacritics_list
-
-
 
 
 def file_search(filename, root_dir="C:/", ext=True, single_result=False):
@@ -140,7 +141,14 @@ def file_search(filename, root_dir="C:/", ext=True, single_result=False):
 
 
 def update_panphon_diacritics(to_clipboard=True):
-    # locate diacritic_definitions.yml  
+    """Generate a string to paste into panphon diacritic_definitions document.
+
+    Args:
+        to_clipboard (bool, optional): Defaults to True.
+
+    Returns:
+        str: Text to paste into diacritic_definitions.yml
+    """  
     filename='diacritic_definitions.yml'
     file_results = file_search(filename, root_dir="C:/src", ext=True)
     for i in file_results:
@@ -167,25 +175,8 @@ def update_panphon_diacritics(to_clipboard=True):
     print(new_yaml)
     if to_clipboard:
         pyperclip.copy(new_yaml)
-
     return new_yaml
     
-# def gen_yaml_template(diacritics, to_clipboard=False):
-#     yaml_template="""
-#     - marker: [symbol] # Added
-#         name: "[name]"
-#         position: [position]
-#         conditions:
-#         - syl: "+"
-#         - syl: "-"
-#         content: {}
-#     """
-#     new_yaml = ""
-#     for i in diacritics:
-#         new_yaml += yaml_template.replace('[symbol]', i)
-#     print(new_yaml)
-#     if to_clipboard:
-#         pyperclip.copy(new_yaml)
-#     return new_yaml
-
+# 1. copy column of IPA actual transcriptions to clipboard
+# 2. Run "update_panphon_diacritics()". This also runs extract_diacritics()
 update_panphon_diacritics()
