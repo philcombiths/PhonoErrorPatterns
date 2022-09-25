@@ -1,7 +1,7 @@
 ,0,1
 0,"['ɾ', '']",deletion
-1,"['ʧ', 'ʧ']",deletion
+1,"['ʧ', 'ʧ']",accurate
 2,"['x', '']",deletion
-3,"['ʧ', 'ʧ']",deletion
-4,"['ʤ', 'ʤ']",deletion
-5,"['ʤ', 'ʤ']",deletion
+3,"['ʧ', 'ʧ']",accurate
+4,"['ʤ', 'ʤ']",accurate
+5,"['ʤ', 'ʤ']",accurate

@@ -26,6 +26,13 @@ Note: This script uses objects from panphon package.
 Panphon Setup Procedures:
 1. Install or verify installation of panphon in the current python environment:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
+2. Incorporate phones and diacritics from prior analyses into a new panphon
+   install: Copy diacritic_definitions.yml, ipa_bases.csv, and ipa_all.csv 
+   from panphon_files folder in this project to panphon directory of current 
+   environment.
+***Base Phones***
+1. Update ipa_bases.csv with missing phones (likely ʧ, ʤ, ʦ)
+***Diacritics***
 2. Use extract_diacritics() to derive list of unique diacritics in dataset.
     - Requires transcriptions in a single column.
 3. Update diacritic_definitions.yml in panphon/data with any diacritics
@@ -214,7 +221,7 @@ def error_pattern(target, actual, debug=False):
     if len(target) > 3:
         structure = "CCC+"
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
-        
+    return     
 
 
 def error_pattern_resolver(target, actual, pattern):
@@ -396,7 +403,7 @@ def error_quantifier(x, full_correct_value=1, full_deletion_value=0,
     return score
 
 
-def error_patterns_table(input_filename, score_column=True, resolver=True):
+def error_patterns_table(input_filepath, score_column=True, resolver=True):
     """
     Generates error patterns for a dataset of transcriptions.
     
@@ -404,7 +411,7 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
         error_patterns()
         panphon
         a csv file including transcription data with "IPA Actual" and
-            "IPA Target" columns in cwd
+            "IPA Target" columns at specified path
     
     Creates:
         'error_patterns.csv' in cwd
@@ -412,7 +419,7 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
     Returns:
         DataFrame with IPA Actual, IPA Target, and 'error_pattern' columns
     """
-    data = pd.read_csv(input_filename, low_memory=False)    
+    data = pd.read_csv(input_filepath, low_memory=False)    
     # Columns (5,10,13,14,15,30,38,39) have mixed types.    
     data['IPA Actual'] = data['IPA Actual'].astype('str')    
     error_patterns = []
@@ -534,9 +541,10 @@ def debug_testing(test_cases_list):
     """
     return result_list
 
+
 ## Debugging
 # test_cases = import_test_cases()
 # test_result = debug_testing(test_cases)
 
 # Generate data
-# result = error_patterns_table(r"...\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
+result = error_patterns_table(r"C:\Users\pcombiths\OneDrive - University of Iowa\CLD Lab\CLD Lab\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
