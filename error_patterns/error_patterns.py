@@ -238,8 +238,13 @@ def error_pattern_resolver(target, actual, pattern):
     if pattern == 'reduction_other':
         error = 'reduction_other'
         return error, None    
-    if len(t) !=2:
-        return error, None    
+    # Try/Except added as workaround for this error: 
+    # TypeError: object of type 'ph_element' has no len()
+    try:
+        if len(t) !=2:
+            return error, None
+    except TypeError:
+        return error, None
     if pattern =='epenthesis_other':
         error = 'epenthesis'
         if len(a) > 2:
