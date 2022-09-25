@@ -35,12 +35,12 @@ Panphon Setup Procedures:
 ***Diacritics***
 2. Use extract_diacritics() to derive list of unique diacritics in dataset.
     - Requires transcriptions in a single column.
-3. Update diacritic_definitions.yml in panphon/data with any diacritics
-    not already in definitions.
-4. Run command line from panphon directory to update definitions:
+3. Paste output from 2. into diacritic_definitions.yml
+4. Run command line from panphon\panphon directory to update definitions:
+    SHIFT + Right-click > Open PowerShell from here
     'python bin/generate_ipa_all.py data/ipa_bases.csv -d data/diacritic_definitions.yml -s data/sort_order.yml data/ipa_all.csv'
 5. Copy 'ipa_all.csv' and paste into the panphon/data directory in the
-    current python environment 
+    current python environment (if not already in current environment)
     (e.g., 'C:/Users/Philip/Anaconda3/Lib/site-packages/panphon/data')
 
     David R. Mortensen, Patrick Littell, Akash Bharadwaj, Kartik Goyal, 
@@ -50,7 +50,7 @@ Panphon Setup Procedures:
         Technical Papers, pages 3475–3484, Osaka, Japan, December 11-17 2016.
     
 # Example use case:
-result = error_patterns_table("...microdata_c.csv")
+result = error_patterns_table("...microdata_c.csv") # include csv of 
 
 # Debug Testing
 1. Edit test cases in test_cases.txt
@@ -64,7 +64,7 @@ from smtpd import DebuggingServer
 import pandas as pd
 import numpy as np
 import io
-from diacritics import reDiac, extract_diacritics
+# from diacritics import reDiac, extract_diacritics, update_panphon_diacritics
 from ph_element import ph_element, ph_segment, ph_cluster
 import panphon
 import os
@@ -93,7 +93,7 @@ def error_pattern(target, actual, debug=False):
     TO DO: Could determine instances that still count as "present" instead of 
         substitution: e.g., "kʴ" for "kr".
     TO DO: Specify vocalization substitution pattern
-        
+    TO DO: Automate process of updating diacritic_definitions.yml
     """   
     error = None
     
@@ -457,6 +457,14 @@ def error_patterns_table(input_filepath, score_column=True, resolver=True):
     error_patterns_df.to_csv(output_filename, encoding='utf-8', index=False, na_rep='')
     print(f"Error patterns saved to {output_filename}")
     return error_patterns_df
+
+def gen_text_diacritic_definitions():
+    """Generate text to update diacritic_definitions for panphon.
+
+    Returns:
+        str: Text to paste into diacritic_definitions.yml
+    """
+    return update_panphon_diacritics()
 
 
 def import_test_cases(test_cases='test_cases.txt'):
