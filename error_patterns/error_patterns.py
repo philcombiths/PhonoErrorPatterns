@@ -534,8 +534,9 @@ def debug_testing(test_cases_list):
     """
     return result_list
 
+## Debugging
+# test_cases = import_test_cases()
+# test_result = debug_testing(test_cases)
 
-test_cases = import_test_cases()
-test_result = debug_testing(test_cases)
-pass
-# result = error_patterns_table(r"C:\Users\pcombiths\OneDrive - University of Iowa\CLD Lab\CLD Lab\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
+# Generate data
+# result = error_patterns_table(r"...\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
