@@ -479,4 +479,4 @@ def debug_testing(test_cases_list):
         group.append(result_list)
     return test_cases_list
 
-result = error_patterns_table(r"G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_e.csv")
+result = error_patterns_table(r"C:\Users\pcombiths\OneDrive - University of Iowa\CLD Lab\CLD Lab\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
