@@ -239,3 +239,19 @@ fl	fw
 fɾ	fw
 kɾ	kw
 
+unknown:
+ʧ	t
+
+accurate:
+ʧw	ʧw
+l	l
+f	f
+n	n
+
+deletion:
+ɾ	
+ʧ	ʧ
+x	
+ʧ	ʧ
+ʤ	ʤ
+ʤ	ʤ

@@ -26,7 +26,14 @@ Note: This script uses objects from panphon package.
 Panphon Setup Procedures:
 1. Install or verify installation of panphon in the current python environment:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
-2. Use gen_text_diacritic_definitions() to derive list of unique diacritics in dataset.
+2. Incorporate phones and diacritics from prior analyses into a new panphon
+   install: Copy diacritic_definitions.yml, ipa_bases.csv, and ipa_all.csv 
+   from panphon_files folder in this project to panphon directory of current 
+   environment.
+***Base Phones***
+1. Update ipa_bases.csv with missing phones (likely ʧ, ʤ, ʦ)
+***Diacritics***
+2. Use extract_diacritics() to derive list of unique diacritics in dataset.
     - Requires transcriptions in a single column.
 3. Paste output from 2. into diacritic_definitions.yml
 4. Run command line from panphon\panphon directory to update definitions:
@@ -46,17 +53,21 @@ Panphon Setup Procedures:
 result = error_patterns_table("...microdata_c.csv") # include csv of 
 
 # Debug Testing
+1. Edit test cases in test_cases.txt
+2. Execute:
 test_cases = import_test_cases()
 test_result = debug_testing(test_cases)
 
 """
 
+from smtpd import DebuggingServer
 import pandas as pd
 import numpy as np
 import io
 # from diacritics import reDiac, extract_diacritics, update_panphon_diacritics
 from ph_element import ph_element, ph_segment, ph_cluster
 import panphon
+import os
 ft = panphon.FeatureTable()
     
 
@@ -78,6 +89,7 @@ def error_pattern(target, actual, debug=False):
     
     TO DO: fix issue: multiple actual segments whose smallest distance indicates
         substitution with the same target consonant.
+    TO DO: Fix issue: Affricates are scored unexpectedly as deletions.
     TO DO: Could determine instances that still count as "present" instead of 
         substitution: e.g., "kʴ" for "kr".
     TO DO: Specify vocalization substitution pattern
@@ -209,7 +221,7 @@ def error_pattern(target, actual, debug=False):
     if len(target) > 3:
         structure = "CCC+"
         print("Only C, CC, CCC are valid targets. CCC+ targets skipped")
-        
+    return     
 
 
 def error_pattern_resolver(target, actual, pattern):
@@ -238,8 +250,13 @@ def error_pattern_resolver(target, actual, pattern):
     if pattern == 'reduction_other':
         error = 'reduction_other'
         return error, None    
-    if len(t) !=2:
-        return error, None    
+    # Try/Except added as workaround for this error: 
+    # TypeError: object of type 'ph_element' has no len()
+    try:
+        if len(t) !=2:
+            return error, None
+    except TypeError:
+        return error, None
     if pattern =='epenthesis_other':
         error = 'epenthesis'
         if len(a) > 2:
@@ -386,7 +403,7 @@ def error_quantifier(x, full_correct_value=1, full_deletion_value=0,
     return score
 
 
-def error_patterns_table(input_filename, score_column=True, resolver=True):
+def error_patterns_table(input_filepath, score_column=True, resolver=True):
     """
     Generates error patterns for a dataset of transcriptions.
     
@@ -394,7 +411,7 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
         error_patterns()
         panphon
         a csv file including transcription data with "IPA Actual" and
-            "IPA Target" columns in cwd
+            "IPA Target" columns at specified path
     
     Creates:
         'error_patterns.csv' in cwd
@@ -402,7 +419,7 @@ def error_patterns_table(input_filename, score_column=True, resolver=True):
     Returns:
         DataFrame with IPA Actual, IPA Target, and 'error_pattern' columns
     """
-    data = pd.read_csv(input_filename, low_memory=False)    
+    data = pd.read_csv(input_filepath, low_memory=False)    
     # Columns (5,10,13,14,15,30,38,39) have mixed types.    
     data['IPA Actual'] = data['IPA Actual'].astype('str')    
     error_patterns = []
@@ -451,15 +468,24 @@ def gen_text_diacritic_definitions():
 
 
 def import_test_cases(test_cases='test_cases.txt'):
-    """From txt file, import list of test cases for use with debug_testing()"""
-    
+    """From txt file, import list of test cases for use with debug_testing()
+
+    Args:
+        test_cases (str, optional): filename/path of input text with test 
+        cases. Defaults to 'test_cases.txt'.
+
+    Returns:
+        list: Test cases in a list of lists for debug_testing()
+    """    
+    # Accepts ["epenthesis_other", "other", "reduction_other", "substitution_other"]
+    # sections in text doc
     test_cases = []
     with io.open('test_cases.txt', encoding='utf-8', mode="r") as f:
         txt = f.readlines()    
-    txt = [line.strip() for line in txt]
-    txt = [line for line in txt if line]
-    epenthesis_other = txt[txt.index('epenthesis_other:')+1:txt.index('other:')]
-    epenthesis_other = [x.split('	') for x in epenthesis_other]
+    txt = [line.strip() for line in txt] # Strip white space on lines
+    txt = [line for line in txt if line] # Remove empty lines
+    epenthesis_other = txt[txt.index('epenthesis_other:')+1:txt.index('other:')] # Extract section
+    epenthesis_other = [x.split('	') for x in epenthesis_other] # Split Target and Actual
     test_cases.append(['epenthesis_other', epenthesis_other])
     
     other = txt[txt.index('other:')+1:txt.index('reduction_other:')]
@@ -470,21 +496,63 @@ def import_test_cases(test_cases='test_cases.txt'):
     reduction_other = [x.split('	') for x in reduction_other]
     test_cases.append(['reduction_other', reduction_other])
 
-    substitution_other = txt[txt.index('substitution_other:')+1:]
+    substitution_other = txt[txt.index('substitution_other:')+1:txt.index('unknown:')]
     substitution_other = [x.split('	') for x in substitution_other]
     test_cases.append(['substitution_other', substitution_other])
-    
+
+    unknown = txt[txt.index('unknown:')+1:txt.index('accurate:')] # name in txt can't be "other". Use "unknown"
+    unknown = [x.split('	') for x in unknown]
+    test_cases.append(['unknown', unknown])
+
+    accurate = txt[txt.index('accurate:')+1:txt.index('deletion:')]
+    accurate = [x.split('	') for x in accurate]
+    test_cases.append(['accurate', accurate])
+
+    deletion = txt[txt.index('deletion:')+1:]
+
+    deletion = [x.split('	') for x in deletion]
+    # Add empty string for line with blank IPA Actual
+    # Append modifies list directly. Don't need to assign to variable
+    [x.append('') for x in deletion if len(x)==1] 
+    test_cases.append(['deletion', deletion])
+
     return test_cases
     
 
 def debug_testing(test_cases_list):
-    """from result of import_text_case() get error_pattern() results."""
+    """From import_test_cases() test error patterns and export to csv
+
+    Args:
+        test_cases_list list: Must come from import_test_cases()
+
+    Returns:
+        list: Complex embedded list. Each item is a subsection of tested items.
+    """    
     for group in test_cases_list:
         group.append([])
         for item in group[1]:
             group[2].append(error_pattern(item[0], item[1], debug=True))
             result_list = [[x[0], x[1]] for x in zip(group[1], group[2])]
         group.append(result_list)
-    return test_cases_list
-result = error_patterns_table(r"C:\Users\pcombiths\Documents\GitHub\PhonoErrorPatterns\error_patterns\ph-II_sp-en-merged_REV.csv")
-# result = error_patterns_table(r"G:\My Drive\Phonological Typologies Lab\Projects\Spanish SSD Tx\Data\Processed\ICPLA 2020_2021\SpTxR\microdata_e.csv")
+    result_list = [(x[0], pd.DataFrame(x[3])) for x in test_cases_list]
+    for i in result_list:
+        try:
+            i[1].to_csv(os.path.join('debug_results', i[0]+'.csv'), encoding='utf-8')
+        except FileNotFoundError:
+            os.mkdir('debug_results')
+            i[1].to_csv(os.path.join('debug_results', i[0]+'.csv'), encoding='utf-8')
+    """
+    # Result is list of lists. Each list is a subsection of test items.
+    # Within each subsection, list in format [0, 1]:
+    0 = Group title from input
+    1 = Pandas dataframe with a) IPA input and b) derived error patterns
+    """
+    return result_list
+
+
+## Debugging
+# test_cases = import_test_cases()
+# test_result = debug_testing(test_cases)
+
+# Generate data
+result = error_patterns_table(r"C:\Users\pcombiths\OneDrive - University of Iowa\CLD Lab\CLD Lab\projects\spanishSSDTx\Phase II Su21\data\ph-II_sp-en-merged_REV.csv")
