@@ -26,6 +26,8 @@ Note: This script uses objects from panphon package.
 Panphon Setup Procedures:
 1. Install or verify installation of panphon in the current python environment:
     e.g., 'pip install -e git+https://github.com/dmort27/panphon.git#egg=panphon'
+    This installs panphon within the current project so it can be edited with this
+    script.
 2. Incorporate phones and diacritics from prior analyses into a new panphon
    install: Copy diacritic_definitions.yml, ipa_bases.csv, and ipa_all.csv 
    from panphon_files folder in this project to panphon directory of current 
@@ -66,10 +68,11 @@ from smtpd import DebuggingServer
 
 import numpy as np
 import pandas as pd
-import panphon
 
 # from diacritics import reDiac, extract_diacritics, update_panphon_diacritics
 from ph_element import ph_cluster, ph_element, ph_segment
+
+import panphon
 
 ft = panphon.FeatureTable()
 
@@ -593,3 +596,9 @@ result = error_patterns_table(
         r"C:\Users\Philip\Documents\DPA\Test Analysis\Compiled\merged_files\data_accuracy.csv"
     )
 )
+
+# result2 = error_pattern_resolver(
+#     os.path.normpath(
+#         r"C:\Users\Philip\Documents\DPA\Test Analysis\Compiled\merged_files\data_accuracy.csv"
+#     )
+# )

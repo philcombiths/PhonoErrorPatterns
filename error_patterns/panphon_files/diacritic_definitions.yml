@@ -1,5 +1,1871 @@
 # DIACRITICS AND MODIFIERS
 diacritics:
+# Added DPA
+    - marker: ̪̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ˢ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ˢ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴ˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪̚ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪̚ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͮ̾ᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ͮ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵ʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ᵗ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˭ᵐ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ʷ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵ʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʷ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ʲ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͋ʲ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ᵐ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶿ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͮ̾ː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˀʰ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̚ː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ˡ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵖ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͮ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ᵗᶴ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʰᵗ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵ᶴ̵ʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴͦ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈᶾ̥̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶻ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶷʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵐ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ⁿ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶿ̵ᶴ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈᶾ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶦ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̚ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ᵗ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ᶴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʲᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥̩ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶻ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ⁿ̵ͦ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʰ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ːᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗᶴˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗᶴ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵏ̵ͤ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͤ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵑ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈᶾˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker:  ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪͋ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵑ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵏ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ᵑ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵ʲ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ͮ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵˭ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ᶦ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡ̥̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈ̵ᶾ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪  # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶿ̵̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ᶦ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʰ̵͋ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ʰ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̚ˢ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵖᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵏ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵇ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵐ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪̪̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶷː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʲʲ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢʲ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͥ˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶾ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶿ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˀ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ˀ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵ʲ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵇ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͤ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̳ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶦ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶻ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊ˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ᶿ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵖ̵̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈͦ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ͮ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵ʷ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ːᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ᵗ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʷͥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵ᵗ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͧ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗᶴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ᶷ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵍ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͔̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵ͤ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ⁿ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͋ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶷ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊᵗᶴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ͮ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ː̥ᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵏ̵̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ᶷ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ᵖ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˣ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈᶾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ᵖ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵍ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺  # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵍ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵖ˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ː˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ʷ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥̃ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵍ̵ᵊ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ː̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˺ˢ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵇ̵ᵊ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ⁿ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͦ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡ˺ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊ̵̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵖ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͔ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ᵈ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃̚ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗᶿ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵̃ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵊː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶦ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵖ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴᵗ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʲ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ͥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶿ̵̪ᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʷʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥  # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ˢ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶿ̥̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶷ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˡ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵ʰ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̂ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʲː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ʰ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶷ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʲ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̩̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵͋ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵ˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶻ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʲʰ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥ᵗ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴ̚ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̪ᵊ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˭ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̜ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ͮ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʴ̥ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵ᶴ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʰː # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗᶴ̪̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ːːʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃̃̃ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶻʲ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶿ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᶴ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ʳ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̵ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̚ˡ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵗ̚ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̥̪ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵍ̵ʴ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ᵈᶾ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ˢ̵ͮ̾ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+    - marker: ̃ᶿ # Added
+      name: "[name]"
+      position: [position]
+      conditions:
+        - syl: "+"
+        - syl: "-"
+      content: {}
+
+
 # Added Spanish SSD Tx II
   - marker: ˢ̵  # Added
     name: "Pre Little s"
