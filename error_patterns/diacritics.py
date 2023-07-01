@@ -10,8 +10,8 @@ Usage with panphon / error_patterns.py:
 2. Execute update_panphon_diacritics()
 
 Created on Tue Aug  4 17:09:45 2020
-@author: Philip
-@modified: 2023-06-29
+@author: Philip Combiths
+@modified: 2023-06-30
 
 To Do:
 - Make edits directly to src/panphon yml within PhonoErrorPatterns

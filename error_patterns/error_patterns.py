@@ -4,6 +4,7 @@ error_patterns version 0.1
 
 Created on Tue Jul 28 14:58:21 2020
 @author: Philip Combiths
+@modified: 2023-06-30
 
 From IPA target and actual transcriptions, generates error pattern labels with
 error_pattern() for a single pair of transcriptions or error_pattern_table()
@@ -284,8 +285,13 @@ def error_pattern_resolver(target, actual, pattern):
         error = "substitution"
 
     # Create target-actual feature distance matrix
-    index = pd.Series([x for x in a])
-    cols = pd.Series([x for x in t])
+    try:
+        index = pd.Series([x for x in a])
+        cols = pd.Series([x for x in t])
+    except TypeError as e:
+        print(e)
+        index = pd.Series(a)
+        cols = pd.Series(t)
     dist_matrix = pd.DataFrame(
         index.apply(lambda x: cols.apply(lambda y: x.fts - y.fts))
     )
@@ -591,14 +597,10 @@ def debug_testing(test_cases_list):
 # test_result = debug_testing(test_cases)
 
 # Generate data
+## Resolver currently not working. Stick to basic error patterns
 result = error_patterns_table(
     os.path.normpath(
-        r"C:\Users\Philip\Documents\DPA\Test Analysis\Compiled\merged_files\data_accuracy.csv"
-    )
+        r"C:\Users\Philip\Documents\DPA\data\DPA v1_6\Compiled\merged_files\compatible_data.csv",
+    ),
+    resolver=False,
 )
-
-# result2 = error_pattern_resolver(
-#     os.path.normpath(
-#         r"C:\Users\Philip\Documents\DPA\Test Analysis\Compiled\merged_files\data_accuracy.csv"
-#     )
-# )
