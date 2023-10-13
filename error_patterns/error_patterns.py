@@ -69,7 +69,6 @@ from smtpd import DebuggingServer
 
 import numpy as np
 import pandas as pd
-
 # from diacritics import reDiac, extract_diacritics, update_panphon_diacritics
 from ph_element import ph_cluster, ph_element, ph_segment
 
@@ -600,7 +599,7 @@ def debug_testing(test_cases_list):
 ## Resolver currently not working. Stick to basic error patterns
 result = error_patterns_table(
     os.path.normpath(
-        r"C:\Users\Philip\Documents\DPA\data\DPA v1_6\Compiled\merged_files\compatible_data.csv",
+        r"C:\Users\Philip\OneDrive - University of Iowa\CLD Lab\Adult Language DLD\Pilot (IASCL 2023)\data\data_accuracy.csv",
     ),
     resolver=False,
 )
