@@ -69,10 +69,9 @@ from smtpd import DebuggingServer
 
 import numpy as np
 import pandas as pd
+import panphon
 # from diacritics import reDiac, extract_diacritics, update_panphon_diacritics
 from ph_element import ph_cluster, ph_element, ph_segment
-
-import panphon
 
 ft = panphon.FeatureTable()
 
@@ -599,7 +598,7 @@ def debug_testing(test_cases_list):
 ## Resolver currently not working. Stick to basic error patterns
 result = error_patterns_table(
     os.path.normpath(
-        r"C:\Users\Philip\OneDrive - University of Iowa\CLD Lab\Adult Language DLD\Pilot (IASCL 2023)\data\data_accuracy.csv",
+        "/Users/pcombiths/Library/CloudStorage/OneDrive-UniversityofIowa/Offline Work/SSD Tx III - BHL/analysis/phone_data.csv",
     ),
     resolver=False,
 )
